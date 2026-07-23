@@ -16,6 +16,11 @@ const PRACTICAS_SRC = path.join(ROOT, 'content', 'practicas')
 const THEME = path.join(SLIDES_SRC, 'theme', 'umu.css')
 const WEB_SRC = path.join(ROOT, 'web')
 
+// Favicon compartido (emoji de infinito ♾️) para las diapositivas y las prácticas.
+// web/index.html define el suyo aparte, directamente en el HTML.
+const FAVICON_LINK =
+  "<link rel=\"icon\" href=\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♾️</text></svg>\">"
+
 const md = new MarkdownIt({
   html: true,
   linkify: true,
@@ -97,6 +102,11 @@ async function buildSlides() {
       throw new Error(`Marp CLI falló al generar ${file} (código ${exitCode})`)
     }
 
+    // Marp CLI no tiene una opción para fijar el favicon: lo inyectamos
+    // después, a mano, en el <head> del HTML ya generado.
+    const generatedHtml = await fs.readFile(outPath, 'utf-8')
+    await fs.writeFile(outPath, generatedHtml.replace('<head>', `<head>${FAVICON_LINK}`), 'utf-8')
+
     manifest.push({
       id: slug,
       title,
@@ -117,6 +127,7 @@ function practicaTemplate({ title, contentHtml }) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
+${FAVICON_LINK}
 <link rel="stylesheet" href="../vendor/github-markdown.css">
 <link rel="stylesheet" href="../vendor/highlight.css">
 <style>
