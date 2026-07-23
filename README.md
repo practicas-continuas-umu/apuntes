@@ -126,4 +126,4 @@ El workflow `.github/workflows/deploy.yml` se ejecuta en cada `push` a `main`:
 
 ## Sobre `material/`
 
-La carpeta `material/` contiene el temario antiguo en LaTeX/Beamer, previo a la reorganización de la asignatura. Se conserva como referencia histórica, pero **no se usa para generar la web** ni se mantiene activamente: todo el contenido vigente vive en `content/`.
+La carpeta `material/` contiene el temario antiguo en LaTeX/Beamer, previo a la reorganización de la asignatura. Se conserva como referencia histórica y ha sido usado como base para el desarrollo del contenido actual.
