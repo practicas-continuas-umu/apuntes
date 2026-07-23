@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prácticas Continuas · Apuntes</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Mostrar/ocultar menú" aria-expanded="false">☰</button>
+
+  <div class="layout">
+    <nav id="sidebar" class="sidebar">
+      <button type="button" id="home-link" class="sidebar-title">Prácticas Continuas</button>
+
+      <section class="nav-section">
+        <h2>Teoría</h2>
+        <ul id="nav-temas" class="nav-list"></ul>
+      </section>
+
+      <section class="nav-section">
+        <h2>Prácticas</h2>
+        <ul id="nav-practicas" class="nav-list"></ul>
+      </section>
+    </nav>
+
+    <main class="viewer-pane">
+      <header class="viewer-header">
+        <span id="viewer-title" class="viewer-title">Inicio</span>
+        <button id="present-btn" class="present-btn" hidden>Presentar ⛶</button>
+      </header>
+      <div id="home-view" class="home-view">
+        <section class="home-section">
+          <h2>Teoría</h2>
+          <div id="home-temas" class="home-grid"></div>
+        </section>
+        <section class="home-section">
+          <h2>Prácticas</h2>
+          <div id="home-practicas" class="home-grid"></div>
+        </section>
+      </div>
+      <iframe id="viewer" class="viewer-frame" hidden title="Contenido"></iframe>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

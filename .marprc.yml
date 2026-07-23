@@ -1,0 +1,8 @@
+# Configuración global de Marp CLI (ver scripts/build.mjs).
+# Desactivamos la conversión de emojis a imágenes servidas desde un CDN
+# (twemoji) para que las diapositivas se puedan proyectar sin conexión
+# a internet: los emojis se quedan como texto Unicode normal.
+options:
+  emoji:
+    shortcode: false
+    unicode: false

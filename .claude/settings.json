@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes @marp-team/marp-cli --version)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(npx --yes serve -l 4173 _site)",
+      "Bash(curl -sI http://localhost:4173/)",
+      "Bash(curl -sI http://localhost:4173/slides/tema4-virtualizacion-contenedores.html)",
+      "Bash(curl -sI http://localhost:4173/slides/assets/tema4/docker.png)",
+      "Bash(curl -sI http://localhost:4173/practicas/boletin3-docker.html)",
+      "Bash(curl -sI http://localhost:4173/manifest.json)",
+      "Bash(curl -s http://localhost:4173/manifest.json)",
+      "Bash(curl -sI http://localhost:4173/vendor/github-markdown.css)",
+      "Bash(curl -sL http://localhost:4173/slides/tema4-virtualizacion-contenedores.html -o /dev/null -w \"%{http_code} %{content_type}\\\\n\")",
+      "Bash(curl -sL http://localhost:4173/practicas/boletin3-docker.html -o /dev/null -w \"%{http_code} %{content_type}\\\\n\")",
+      "Bash(curl -s http://localhost:4173/practicas/boletin3-docker.html)",
+      "Bash(curl -s http://localhost:4173/practicas/boletin1-git-maven.html)",
+      "Bash(curl -sL http://localhost:4173/practicas/boletin3-docker.html)",
+      "Bash(curl -sL http://localhost:4173/practicas/boletin1-git-maven.html)",
+      "Bash(pkill -f \"serve -l 4173\")",
+      "Bash(node -e ' *)",
+      "Bash(python3 -c \"import yaml,sys; yaml.safe_load\\(open\\('.github/workflows/deploy.yml'\\)\\); yaml.safe_load\\(open\\('.marprc.yml'\\)\\); print\\('YAML OK'\\)\")",
+      "Bash(npx --yes serve -l 4174 _site)",
+      "Bash(curl -s http://localhost:4174/)",
+      "Bash(curl -sI http://localhost:4174/app.js)",
+      "Bash(pkill -f \"serve -l 4174\")"
+    ]
+  }
+}
