@@ -13,7 +13,7 @@ footer: "Prácticas Continuas · Tema 6"
 # Tema 6
 ## Infraestructura como Código
 
-Grado en Informática · Universidad de Murcia
+MISUM · Universidad de Murcia
 
 ---
 
@@ -40,7 +40,11 @@ Grado en Informática · Universidad de Murcia
 
 Elimina la necesidad de aprovisionar y gestionar manualmente servidores, sistemas operativos, conexiones a bases de datos, redes...
 
+<center>
+
 ![w:460](assets/tema6/iac.png)
+
+</center>
 
 ---
 
@@ -136,7 +140,11 @@ Configuración habitual con **dos repositorios**: uno de aplicación (código + 
 - Configuración sencilla: solo exige tener **Python** en cada equipo a administrar.
 - No requiere agentes instalados en los nodos gestionados (usa SSH).
 
+<center>
+
 ![w:420](assets/tema6/ansible.jpg)
+
+</center>
 
 ---
 
@@ -145,7 +153,11 @@ Configuración habitual con **dos repositorios**: uno de aplicación (código + 
 - **Nodo de control**: sistema con Ansible instalado, desde el que se ejecutan los comandos.
 - **Nodo gestionado**: sistema administrado por Ansible. Requisitos mínimos: Linux + Python + SSH.
 
+<center>
+
 ![w:460](assets/tema6/ansible-ar.png)
+
+</center>
 
 ---
 

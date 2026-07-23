@@ -6,7 +6,6 @@ Sitio web de la asignatura, publicado con **GitHub Pages** y desplegado automát
 - Los **boletines de prácticas** (6 prácticas + proyecto), en Markdown normal (documento, no diapositivas).
 - Un selector web sencillo para elegir qué tema o práctica ver.
 
-👉 URL una vez publicado: `https://<usuario-u-organización>.github.io/<repositorio>/`
 
 ---
 

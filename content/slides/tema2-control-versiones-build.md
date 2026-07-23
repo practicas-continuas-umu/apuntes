@@ -13,7 +13,7 @@ footer: "Prácticas Continuas · Tema 2"
 # Tema 2
 ## Control de versiones y herramientas de construcción
 
-Grado en Informática · Universidad de Murcia
+MISUM · Universidad de Murcia
 
 ---
 
@@ -96,7 +96,11 @@ Cada archivo puede estar en uno de estos estados:
 - **Modified**: modificado desde el último commit.
 - **Staged**: los cambios están preparados (`git add`) para el próximo commit.
 
+<center>
+
 ![w:520](assets/tema2/lifecycle.png)
+
+</center>
 
 ---
 

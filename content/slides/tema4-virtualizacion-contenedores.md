@@ -13,7 +13,7 @@ footer: "Prácticas Continuas · Tema 4"
 # Tema 4
 ## Virtualización y contenedorización
 
-Grado en Informática · Universidad de Murcia
+MISUM · Universidad de Murcia
 
 ---
 
@@ -55,7 +55,11 @@ Tipos principales:
 - Es la base del *cloud computing*.
 - Ejemplos: Xen, KVM, VirtualBox, VMware, Hyper-V.
 
+<center>
+
 ![w:380](assets/tema4/hypervisor.png)
+
+</center>
 
 ---
 
@@ -79,7 +83,11 @@ Tipos principales:
 
 Un contenedor es un **proceso aislado** que incluye todo lo necesario para ejecutarse: código, dependencias y configuración.
 
+<center>
+
 ![w:520](assets/tema4/vmvscontainer.png)
+
+</center>
 
 ---
 
@@ -313,7 +321,11 @@ En vez de lanzar varios `docker run` con opciones largas, describes toda la apli
 docker compose up
 ```
 
+<center>
+
 ![w:280](assets/tema4/compose.png)
+
+</center>
 
 Muchos ejemplos en: `github.com/docker/awesome-compose`
 

@@ -13,7 +13,7 @@ footer: "Prácticas Continuas · Tema 1"
 # Tema 1
 ## Fundamentos de las Prácticas Continuas y DevOps
 
-Grado en Informática · Universidad de Murcia
+MISUM · Universidad de Murcia
 
 ---
 
@@ -138,7 +138,11 @@ DevOps nace de las prácticas iterativas, por la necesidad de mayor sinergia ent
 
 ## Fases de un ciclo DevOps
 
+<center>
+
 ![w:480](assets/tema1/phases.png)
+
+</center>
 
 **Plan → Code → Build → Test → Release → Deploy → Operate → Monitor** → (vuelta a Plan)
 
@@ -167,7 +171,11 @@ DevOps nace de las prácticas iterativas, por la necesidad de mayor sinergia ent
 
 Existen multitud de herramientas que dan soporte a cada fase del ciclo DevOps:
 
+<center>
+
 ![w:560](assets/tema1/devops-tools.png)
+
+</center>
 
 A lo largo de la asignatura usaremos: **Git, Maven, GitHub, Docker, GitHub Actions y Ansible**.
 
@@ -235,8 +243,6 @@ Ejemplos:
 
 > **DevSecOps** = Desarrollo + Seguridad + Operaciones. Integra prácticas de seguridad de forma continua y automatizada en el flujo de desarrollo y despliegue, en vez de tratarlas como un añadido final.
 
-Prácticas habituales:
-
 - **SAST** (Static Application Security Testing): analiza el código fuente en busca de vulnerabilidades.
 - **DAST** (Dynamic Application Security Testing): pruebas de seguridad durante la ejecución.
 - **SCA** (Software Composition Analysis): detecta vulnerabilidades en librerías y dependencias.
@@ -251,7 +257,8 @@ Prácticas habituales:
 
 # ¿Y ahora qué?
 
-La asignatura recorre el ciclo DevOps completo:
-
-**Tema 2**: control de versiones y build tools · **Tema 3**: colaboración en GitHub
-**Tema 4**: contenedorización · **Tema 5**: CI/CD · **Tema 6**: IaC con Ansible
+- **Tema 2**: control de versiones y build tools 
+- **Tema 3**: colaboración en GitHub
+- **Tema 4**: contenedorización
+- **Tema 5**: CI/CD
+- **Tema 6**: IaC con Ansible

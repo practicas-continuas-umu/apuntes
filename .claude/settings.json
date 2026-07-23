@@ -24,7 +24,8 @@
       "Bash(npx --yes serve -l 4174 _site)",
       "Bash(curl -s http://localhost:4174/)",
       "Bash(curl -sI http://localhost:4174/app.js)",
-      "Bash(pkill -f \"serve -l 4174\")"
+      "Bash(pkill -f \"serve -l 4174\")",
+      "Bash(python3 -)"
     ]
   }
 }

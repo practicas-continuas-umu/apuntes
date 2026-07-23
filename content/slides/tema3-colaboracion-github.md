@@ -13,7 +13,7 @@ footer: "Prácticas Continuas · Tema 3"
 # Tema 3
 ## Colaboración y flujos de trabajo sobre repositorios
 
-Grado en Informática · Universidad de Murcia
+MISUM · Universidad de Murcia
 
 ---
 
@@ -39,7 +39,11 @@ Grado en Informática · Universidad de Murcia
 - Añade una interfaz web, gestión de *issues*, revisión de código, CI/CD (**GitHub Actions**), wikis, etc.
 - **No es un sistema de control de versiones en sí mismo**: usa Git como base y añade servicios extra.
 
+<center>
+
 ![w:220](assets/tema3/gitgithub.png)
+
+</center>
 
 ---
 
@@ -58,7 +62,11 @@ Grado en Informática · Universidad de Murcia
 
 ## Estructura de un repositorio en GitHub
 
+<center>
+
 ![w:620](assets/tema3/githubstructure.png)
+
+</center>
 
 Código, *issues*, *pull requests*, *actions*, *wiki* y ajustes conviven en el mismo repositorio.
 
@@ -111,7 +119,11 @@ Es una plataforma diseñada para la colaboración entre desarrolladores, tanto e
 
 ## Flujo de trabajo en GitHub
 
+<center>
+
 ![w:520](assets/tema3/workflow.png)
+
+</center>
 
 Ejemplo real: `https://github.com/jgrapht/jgrapht/pull/811`
 

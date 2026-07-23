@@ -13,7 +13,7 @@ footer: "Prácticas Continuas · Tema 5"
 # Tema 5
 ## Integración y Entrega Continuas
 
-Grado en Informática · Universidad de Murcia
+MISUM · Universidad de Murcia
 
 ---
 
@@ -93,7 +93,11 @@ El **despliegue continuo** añade, además, el despliegue automático a producci
 - Cada **job** se ejecuta en su propia máquina virtual (**runner**) y consta de uno o más **steps**.
 - Cada **step** es una **action** (reutilizable) o un **script**.
 
+<center>
+
 ![w:480](assets/tema5/actions.png)
+
+</center>
 
 ---
 
