@@ -3,7 +3,7 @@
 Sitio web de la asignatura, publicado con **GitHub Pages** y desplegado automáticamente en cada `push` a `main`. Incluye:
 
 - Las **diapositivas de teoría** (6 temas), escritas en Markdown con [Marp](https://marp.app/) y navegables con las flechas del teclado, con un botón para proyectarlas a pantalla completa.
-- Los **boletines de prácticas** (6 prácticas + proyecto), en Markdown normal (documento, no diapositivas).
+- Los **boletines de prácticas** (boletín 0 de guía + 7 sesiones + proyecto), en Markdown normal (documento, no diapositivas).
 - Un selector web sencillo para elegir qué tema o práctica ver.
 
 
