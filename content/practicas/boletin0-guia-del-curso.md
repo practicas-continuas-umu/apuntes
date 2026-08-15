@@ -18,6 +18,7 @@ title: "Boletín 0: Guía de la primera parte de la asignatura"
 4. [Proyecto asociado al enunciado común](#4-proyecto-asociado-al-enunciado-común)
 5. [Resumen de entregables](#5-resumen-de-entregables)
 6. [Uso de asistentes de IA](#6-uso-de-asistentes-de-ia)
+7. [Cronograma](#7-cronograma)
 
 ---
 
@@ -275,3 +276,38 @@ El uso de asistentes de IA (ChatGPT, Claude, Copilot, Gemini…) está **permiti
 2. **Declarar el uso** en los boletines: qué herramienta se ha usado y qué se le ha pedido.
 
 Se recomienda Claude Code, GitHub Copilot o Codex, con sus respectivas extensiones en VS Code.
+
+
+## 7. Cronograma
+
+```mermaid
+gantt
+    title Cronograma primera parte · Curso 2026/2027
+    dateFormat YYYY-MM-DD
+    axisFormat %d/%m
+ 
+    section Temas
+    Tema 1 y 2                 :t12,  2026-09-21, 7d
+    Tema 3                     :t3,   2026-09-28, 7d
+    Tema 4                     :t4,   2026-10-05, 7d
+    Tema 5                     :t5,   2026-10-19, 7d
+    Tema 6                     :t6,   2026-10-26, 7d
+ 
+    section Boletines
+    Boletín 1                  :b1,   2026-09-21, 7d
+    Boletín 2                  :b2,   2026-09-28, 7d
+    Boletín 3                  :b3,   2026-10-05, 7d
+    Boletines 4, 5 y 6         :b456, 2026-10-19, 7d
+    Boletín 7                  :b7,   2026-10-26, 7d
+ 
+    section Proyecto global
+    Desarrollo del proyecto global :active, pg, 2026-09-28, 2026-11-02
+ 
+    section Calendario
+    S1 (21 sep)                :milestone, m1, 2026-09-21, 0d
+    S2 (28 sep)                :milestone, m2, 2026-09-28, 0d
+    S3 (5 oct)                 :milestone, m3, 2026-10-05, 0d
+    Festivo · sin sesión       :crit, milestone, m0, 2026-10-12, 0d
+    S4 (19 oct)                :milestone, m4, 2026-10-19, 0d
+    S5 (26 oct)                :milestone, m5, 2026-10-26, 0d
+```

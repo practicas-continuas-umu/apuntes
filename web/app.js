@@ -12,6 +12,7 @@
   var viewer = document.getElementById('viewer')
   var viewerTitle = document.getElementById('viewer-title')
   var presentBtn = document.getElementById('present-btn')
+  var mdBtn = document.getElementById('md-btn')
 
   var itemsById = {}
 
@@ -91,6 +92,8 @@
   function showHome() {
     viewerTitle.textContent = 'Inicio'
     presentBtn.hidden = true
+    mdBtn.hidden = true
+    mdBtn.removeAttribute('href')
     viewer.hidden = true
     viewer.src = 'about:blank'
     homeView.hidden = false
@@ -106,6 +109,14 @@
     viewer.hidden = false
     viewer.src = item.file
     presentBtn.hidden = item.type !== 'slides'
+    if (item.source) {
+      mdBtn.hidden = false
+      mdBtn.href = item.source
+      mdBtn.download = item.source.split('/').pop()
+    } else {
+      mdBtn.hidden = true
+      mdBtn.removeAttribute('href')
+    }
     setActiveButton(id)
 
     // Da el foco al documento cargado en el iframe para que las flechas

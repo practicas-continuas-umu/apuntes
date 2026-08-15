@@ -157,11 +157,15 @@ async function buildSlides() {
     const generatedHtml = await fs.readFile(outPath, 'utf-8')
     await fs.writeFile(outPath, generatedHtml.replace('<head>', `<head>${FAVICON_LINK}`), 'utf-8')
 
+    // Copia el .md original para el botón "Descargar MD" del visor.
+    await fs.copyFile(srcPath, path.join(outDir, file))
+
     manifest.push({
       id: slug,
       title,
       type: 'slides',
       file: `slides/${slug}.html`,
+      source: `slides/${file}`,
       order: orderOf(slug),
     })
   }
@@ -231,11 +235,15 @@ async function buildPracticas() {
 
     await fs.writeFile(outPath, practicaTemplate({ title, contentHtml }), 'utf-8')
 
+    // Copia el .md original para el botón "Descargar MD" del visor.
+    await fs.copyFile(srcPath, path.join(outDir, file))
+
     manifest.push({
       id: slug,
       title,
       type: 'practica',
       file: `practicas/${slug}.html`,
+      source: `practicas/${file}`,
       order: orderOf(slug),
     })
   }
