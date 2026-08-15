@@ -37,6 +37,56 @@ const md = new MarkdownIt({
   },
 })
 
+// Los bloques ```mermaid no se resaltan como código: se renderizan como
+// diagrama en el navegador (mermaid.js los busca por su clase "mermaid").
+const defaultFenceRenderer =
+  md.renderer.rules.fence ||
+  function (tokens, idx, options, env, self) {
+    return self.renderToken(tokens, idx, options)
+  }
+md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+  const token = tokens[idx]
+  const lang = token.info.trim()
+  if (lang === 'mermaid') {
+    return `<pre class="mermaid">${md.utils.escapeHtml(token.content)}</pre>\n`
+  }
+  return defaultFenceRenderer(tokens, idx, options, env, self)
+}
+
+// Slug al estilo GitHub, para que los enlaces manuales de un Índice
+// (p.ej. "[Tema](#1-mi-titulo)") apunten de verdad a su cabecera.
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\p{L}\p{N}\s-]/gu, '')
+    .replace(/\s+/g, '-')
+}
+
+function headingText(tokens, idx) {
+  const inline = tokens[idx + 1]
+  if (!inline || !inline.children) return ''
+  return inline.children
+    .filter((t) => t.type === 'text' || t.type === 'code_inline')
+    .map((t) => t.content)
+    .join('')
+}
+
+// Asigna un id a cada cabecera (h1-h6) a partir de su texto, gestionando
+// duplicados igual que GitHub (segunda aparición de "x" -> "x-1", etc.).
+md.core.ruler.push('heading_ids', (state) => {
+  const slugCounts = new Map()
+  for (let i = 0; i < state.tokens.length; i++) {
+    const token = state.tokens[i]
+    if (token.type !== 'heading_open') continue
+    let slug = slugify(headingText(state.tokens, i))
+    const count = slugCounts.get(slug) || 0
+    slugCounts.set(slug, count + 1)
+    if (count > 0) slug = `${slug}-${count}`
+    token.attrSet('id', slug)
+  }
+})
+
 async function rmrf(target) {
   await fs.rm(target, { recursive: true, force: true })
 }
@@ -121,6 +171,11 @@ async function buildSlides() {
 }
 
 function practicaTemplate({ title, contentHtml }) {
+  const hasMermaid = contentHtml.includes('class="mermaid"')
+  const mermaidScript = hasMermaid
+    ? `<script src="../vendor/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, securityLevel: "loose" })</script>`
+    : ''
   return `<!doctype html>
 <html lang="es">
 <head>
@@ -142,12 +197,18 @@ ${FAVICON_LINK}
     margin: 0 auto;
   }
   .markdown-body pre code.hljs { padding: 0; }
+  .markdown-body pre.mermaid {
+    background: none;
+    border: none;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
   <article class="markdown-body">
     ${contentHtml}
   </article>
+  ${mermaidScript}
 </body>
 </html>
 `
@@ -193,6 +254,10 @@ async function copyVendorAssets() {
   await fs.copyFile(
     path.join(ROOT, 'node_modules', 'highlight.js', 'styles', 'github.css'),
     path.join(vendorDir, 'highlight.css'),
+  )
+  await fs.copyFile(
+    path.join(ROOT, 'node_modules', 'mermaid', 'dist', 'mermaid.min.js'),
+    path.join(vendorDir, 'mermaid.min.js'),
   )
 }
 
