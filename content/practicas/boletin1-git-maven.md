@@ -1,8 +1,8 @@
 ---
-title: "Boletín 1: Git, el proyecto Maven base y la calidad desde el primer commit"
+title: "Boletín 1: Git y proyecto Maven"
 ---
 
-# Boletín 1: Git, el proyecto Maven base y la calidad desde el primer commit
+# Boletín 1: Git y proyecto Maven
 
 > **OBJETIVO**
 >
@@ -125,13 +125,13 @@ mvn clean package
 # El JAR queda en target/*.jar
 ```
 
-- Arranca la aplicación y comprueba que escucha:
+- Arranca la aplicación y comprueba que escucha (registrando alguna instancia y recuperándola con `curl`):
 
 ```bash
-java -jar target/tareas-0.0.1-SNAPSHOT.jar
+java -jar target/nombre-del-jar.jar
 
 # En otra terminal:
-curl http://localhost:8080/api/tasks
+curl ... # prueba los endpoints de la API
 ```
 
 ### Parte D — Control de versiones con Git
@@ -153,7 +153,7 @@ git commit -m "chore: proyecto Maven inicial de la API de tareas"
 >
 > Sin `.gitattributes` un `.sh` guardado en Windows con finales `CRLF` falla dentro del contenedor Linux del [Boletín 3](boletin3-docker.html) con un error raro.
 
-- Añade también un `.editorconfig` para que todos los editores usen la misma indentación:
+- Añade también un `.editorconfig` para que todos los editores usen la misma indentación (si usas VS Code, instala la extensión EditorConfig 🐭):
 
 ```bash
 root = true
@@ -176,12 +176,12 @@ git add .editorconfig
 git commit -m "chore(editor): añade .editorconfig"
 ```
 
-- Crea una rama, haz un cambio pequeño y haz commit en ella:
+- Crea una rama, haz un cambio pequeño pero no trivial y haz commit en ella:
 
 ```bash
-git switch -c feat/campo-prioridad
+git switch -c feat/descripcion-feat
 # ... editar código con IA ...
-git add . && git commit -m "feat(tasks): añade campo prioridad a Task"
+git add . && git commit -m "feat(...): ..."
 ```
 
 - Fusiona la rama en main y observa el historial:

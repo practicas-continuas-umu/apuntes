@@ -69,7 +69,7 @@ flowchart LR
 
 | Boletín | Tema |
 |---|---|
-| [1](boletin1-git-maven.html) | Git, el proyecto Maven base y la calidad desde el primer commit |
+| [1](boletin1-git-maven.html) | Git y proyecto Maven |
 | [2](boletin2-github.html) | GitHub y colaboración con Pull Requests |
 | [3](boletin3-docker.html) | Docker: contenerizar la aplicación |
 | [4](boletin4-ci-github-actions.html) | Integración Continua con GitHub Actions |
