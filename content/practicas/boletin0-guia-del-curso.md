@@ -95,7 +95,7 @@ mi-repositorio/
 
 Cada `boletinX.md` debe incluir:
 
-1. **Una tabla resumen de los commits** de esa sesión: mensaje, descripción breve de lo hecho y enlace al commit en GitHub.
+1. **Una tabla resumen de los commits** de esa sesión: mensaje, descripción breve de lo hecho, autor y enlace al commit en GitHub.
 2. **Una explicación por commit**: qué se hizo y su relación con el boletín. Si se ha usado IA, indicar la herramienta y qué se le pidió.
 3. **Capturas de pantalla** de aquellas partes del boletín que no queden reflejadas en los commits.
 
@@ -107,15 +107,16 @@ Cada `boletinX.md` debe incluir:
 
 ## Resumen de commits
 
-| # | Mensaje del commit | Qué se hizo | Enlace |
-|---|--------------------|-------------|--------|
-| 1 | `feat: ...`        | ...         | [abc1234](https://github.com/.../commit/abc1234) |
+| # | Mensaje del commit | Qué se hizo | Autor | Enlace |
+|---|--------------------|-------------|-------|--------|
+| 1 | `feat: ...`        | ...         | ...   | [abc1234](https://github.com/.../commit/abc1234) |
 
 ## Detalle por commit
 
 ### 1. `feat: ...`
 - **Qué se hizo:** ...
-- **Relación con el boletín:** apartado N.M ...
+- **Autor:** ...
+- **Relación con el boletín:** apartado X ...
 - **Uso de IA:** herramienta y prompt utilizado (o "no se ha usado").
 
 ## Evidencias adicionales

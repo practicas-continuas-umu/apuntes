@@ -174,12 +174,106 @@ async function buildSlides() {
   return manifest
 }
 
+// Tras renderizar cada diagrama Mermaid, lo envuelve con zoom (rueda del
+// ratón, centrado en el cursor) y paneo (arrastrar), más una mini barra de
+// botones +/-/reset para quien no tenga ratón con rueda.
+const MERMAID_PAN_ZOOM_SCRIPT = `<script src="../vendor/mermaid.min.js"></script>
+<script>
+mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' })
+mermaid.run({ querySelector: '.mermaid' }).then(function () {
+  document.querySelectorAll('pre.mermaid').forEach(setupPanZoom)
+})
+
+function setupPanZoom(container) {
+  var svg = container.querySelector('svg')
+  if (!svg) return
+
+  var state = { scale: 1, x: 0, y: 0 }
+  var MIN_SCALE = 0.4
+  var MAX_SCALE = 6
+
+  container.classList.add('mz-wrap')
+  svg.classList.add('mz-svg')
+
+  function apply() {
+    svg.style.transform = 'translate(' + state.x + 'px,' + state.y + 'px) scale(' + state.scale + ')'
+  }
+
+  function zoomBy(factor, cx, cy) {
+    var newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, state.scale * factor))
+    var ratio = newScale / state.scale
+    state.x = cx - (cx - state.x) * ratio
+    state.y = cy - (cy - state.y) * ratio
+    state.scale = newScale
+    apply()
+  }
+
+  container.addEventListener('wheel', function (e) {
+    e.preventDefault()
+    var rect = container.getBoundingClientRect()
+    var cx = e.clientX - rect.left - rect.width / 2
+    var cy = e.clientY - rect.top - rect.height / 2
+    zoomBy(e.deltaY < 0 ? 1.1 : 1 / 1.1, cx, cy)
+  }, { passive: false })
+
+  var dragging = false
+  var startX, startY, origX, origY
+
+  container.addEventListener('pointerdown', function (e) {
+    // No empieces un arrastre si el clic viene de la barra de zoom: si no,
+    // capturar el puntero aquí interfiere con el click del propio botón.
+    if (e.target.closest('.mz-toolbar')) return
+    dragging = true
+    startX = e.clientX
+    startY = e.clientY
+    origX = state.x
+    origY = state.y
+    container.setPointerCapture(e.pointerId)
+    container.classList.add('mz-dragging')
+  })
+  container.addEventListener('pointermove', function (e) {
+    if (!dragging) return
+    state.x = origX + (e.clientX - startX)
+    state.y = origY + (e.clientY - startY)
+    apply()
+  })
+  function endDrag(e) {
+    dragging = false
+    container.classList.remove('mz-dragging')
+    // Sin esto, los clics posteriores en la barra de zoom se redirigen al
+    // contenedor (que sigue "capturando" el puntero) en vez de al botón.
+    if (container.hasPointerCapture(e.pointerId)) {
+      container.releasePointerCapture(e.pointerId)
+    }
+  }
+  container.addEventListener('pointerup', endDrag)
+  container.addEventListener('pointercancel', endDrag)
+  container.addEventListener('dblclick', function () {
+    state = { scale: 1, x: 0, y: 0 }
+    apply()
+  })
+
+  var toolbar = document.createElement('div')
+  toolbar.className = 'mz-toolbar'
+  toolbar.innerHTML =
+    '<button type="button" data-act="in" title="Acercar">+</button>' +
+    '<button type="button" data-act="out" title="Alejar">\\u2212</button>' +
+    '<button type="button" data-act="reset" title="Restablecer">\\u27f2</button>'
+  toolbar.addEventListener('click', function (e) {
+    var act = e.target.getAttribute('data-act')
+    if (act === 'in') zoomBy(1.2, 0, 0)
+    else if (act === 'out') zoomBy(1 / 1.2, 0, 0)
+    else if (act === 'reset') {
+      state = { scale: 1, x: 0, y: 0 }
+      apply()
+    }
+  })
+  container.appendChild(toolbar)
+}
+</script>`
+
 function practicaTemplate({ title, contentHtml }) {
   const hasMermaid = contentHtml.includes('class="mermaid"')
-  const mermaidScript = hasMermaid
-    ? `<script src="../vendor/mermaid.min.js"></script>
-<script>mermaid.initialize({ startOnLoad: true, securityLevel: "loose" })</script>`
-    : ''
   return `<!doctype html>
 <html lang="es">
 <head>
@@ -206,13 +300,48 @@ ${FAVICON_LINK}
     border: none;
     text-align: center;
   }
+  .markdown-body pre.mermaid.mz-wrap {
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+    touch-action: none;
+  }
+  .markdown-body pre.mermaid.mz-wrap.mz-dragging {
+    cursor: grabbing;
+  }
+  .markdown-body pre.mermaid .mz-svg {
+    transform-origin: center center;
+    display: block;
+    margin: 0 auto;
+  }
+  .mz-toolbar {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    display: flex;
+    gap: 0.25rem;
+  }
+  .mz-toolbar button {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 1px solid #d7dde3;
+    background: #ffffff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 0;
+  }
+  .mz-toolbar button:hover {
+    background: #f0f2f4;
+  }
 </style>
 </head>
 <body>
   <article class="markdown-body">
     ${contentHtml}
   </article>
-  ${mermaidScript}
+  ${hasMermaid ? MERMAID_PAN_ZOOM_SCRIPT : ''}
 </body>
 </html>
 `

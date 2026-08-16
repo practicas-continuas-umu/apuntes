@@ -6,7 +6,7 @@ title: "Boletín 1: Git, el proyecto Maven base y la calidad desde el primer com
 
 > **OBJETIVO**
 >
-> A lo largo del curso construirás, de forma incremental, una API REST en Java (Spring Boot) gestionada con Maven, contenerizada con Docker, automatizada con un pipeline de CI/CD y desplegada con Ansible. No se evalúa que escribas Java a mano: puedes apoyarte en una IA para generar el código de la aplicación. Lo que se evalúa es que domines las tecnologías sobre ese código. La entrega de TODO el curso es UN único repositorio de GitHub que va creciendo sesión a sesión.
+> A lo largo del curso construirás, de forma incremental, una API REST en Java (Spring Boot) gestionada con Maven, contenerizada con Docker, automatizada con un pipeline de CI/CD y desplegada con Ansible.
 
 ## 1. Objetivos de la sesión
 
@@ -16,11 +16,11 @@ title: "Boletín 1: Git, el proyecto Maven base y la calidad desde el primer com
 - Tener una **aplicación Maven que compila, pasa tests y se empaqueta** en tu máquina.
 - **Automatizar el formato del código** con Spotless y un hook de pre-commit, para que ningún commit entre sin formatear.
 
-## 2. Conceptos clave (teoría aplicada)
+## 2. Conceptos clave
 
-### 2.1 El modelo mental de Git
+### 2.1 Git
 
-Git no guarda diferencias, guarda **instantáneas (snapshots)** del proyecto en cada commit. El historial es un grafo dirigido de commits, y una **rama es simplemente un puntero** que se mueve a un commit. Interiorizar esto hace que merge, rebase y "deshacer" dejen de ser magia.
+Git no guarda diferencias, guarda **instantáneas (snapshots)** del proyecto en cada commit. El historial es un grafo dirigido de commits, y una **rama es simplemente un puntero** que se mueve a un commit.
 
 **Las tres áreas** que debes distinguir siempre:
 
@@ -28,7 +28,7 @@ Git no guarda diferencias, guarda **instantáneas (snapshots)** del proyecto en 
 - **Staging area (índice)**: lo que has marcado con `git add` para el próximo commit.
 - **Repositorio**: los commits ya confirmados (`git commit`).
 
-### 2.2 Maven en una frase
+### 2.2 Maven
 
 Maven es a la vez un **gestor de dependencias** (descarga las librerías que tu proyecto necesita) y una **herramienta de construcción** (compila, testea y empaqueta siguiendo un ciclo de vida estándar). Todo se declara en el `pom.xml`.
 
@@ -44,9 +44,9 @@ Maven es a la vez un **gestor de dependencias** (descarga las librerías que tu 
 >
 > Spring Boot produce un **"fat JAR"**: un único `.jar` que contiene tu código, todas las dependencias y un servidor web embebido. Por eso arranca con un simple `java -jar app.jar` sin instalar nada más.
 
-### 2.3 Un commit no es un punto de guardado
+### 2.3 Commits
 
-Un commit es una **unidad de cambio con significado**, no un "guardar por si acaso". Un historial legible permite revisar, revertir y encontrar el origen de un fallo. Por eso el curso adopta **Conventional Commits**, un convenio de una línea que además habilita changelogs automáticos más adelante:
+Un commit es una **unidad de cambio con significado**. Los commits deben inducir un historial legible que permita revisar, revertir y encontrar el origen de un fallo. Por eso el curso adopta **Conventional Commits**, un convenio de una línea que además habilita changelogs automáticos más adelante:
 
 ```bash
 feat(tasks): añade filtro de búsqueda por estado
@@ -56,7 +56,7 @@ chore(build): sube spring-boot a 3.3.2
 docs(readme): documenta el arranque local
 ```
 
-Formato: `tipo(ámbito): descripción en imperativo`. Tipos habituales:
+Formato: `tipo(ámbito): descripción en imperativo`. En el ámbito es opcional y suele haber libertad, los tipos son más cerrados. Tipos habituales:
 
 | Tipo | Cuándo se usa |
 |---|---|
@@ -68,11 +68,11 @@ Formato: `tipo(ámbito): descripción en imperativo`. Tipos habituales:
 | `chore` | Tareas de mantenimiento que no afectan al código fuente ni a los tests (dependencias, configuración, build). |
 | `ci` | Cambios en la configuración de integración continua (workflows, pipelines). |
 
-### 2.4 El formato no se discute, se automatiza
+### 2.4 El formato del código
 
-Discutir sobre llaves y sangrías en una revisión de código es tiempo perdido, y los diffs llenos de reformateos ocultan los cambios reales. La solución del sector es **formatear automáticamente** con una herramienta, siempre igual, para todo el equipo. En Java usaremos **Spotless** con el estilo de Google.
+El código se debe formatear automáticamente para evitar diffs con reformateos. Cada lenguaje de programación tiene su estilo y herramienta de formateo. En Java usaremos **Spotless** con el estilo de Google.
 
-## 3. Trabajo práctico — Núcleo (obligatorio)
+## 3. Trabajo práctico
 
 ### Parte A — Instalación y verificación del entorno
 
@@ -95,11 +95,7 @@ git config --global init.defaultBranch main
 
 ### Parte B — Generar la aplicación con ayuda de IA
 
-Pide a una IA que genere una **API REST con Spring Boot y Maven**, con persistencia (en memoria, nada de base de datos). El dominio sugerido es una **API de gestión de tareas (To-Do)**, pero puedes elegir otro (biblioteca, pedidos, etc.) siempre que tenga sustancia.
-
-> **CONSEJO**
->
-> Prompt de ejemplo: *"Genera un proyecto Maven con Spring Boot 3 y Java 21: una API REST de gestión de tareas (entidad Task con id, título, descripción, estado, prioridad y fecha límite). Incluye endpoints CRUD, capa de servicio, validaciones con Bean Validation, manejo de errores con @RestControllerAdvice y tests unitarios con JUnit 5. Usa H2 en memoria por ahora. Devuélveme el pom.xml y la estructura de carpetas."*
+Pide a una IA que genere una **API REST con Spring Boot y Maven**, con persistencia (en memoria, nada de base de datos). El dominio sugerido es una **API de gestión de tareas (To-Do)**, pero puedes elegir otro (biblioteca, pedidos, etc.) siempre que sea no trivial.
 
 **Requisitos mínimos** de la aplicación para considerarse "no trivial":
 
@@ -108,6 +104,16 @@ Pide a una IA que genere una **API REST con Spring Boot y Maven**, con persisten
 - Separación en capas (controlador / servicio / repositorio).
 - Manejo de errores centralizado: un recurso inexistente devuelve **404**, no una traza de excepción.
 - Al menos **5 tests que comprueben reglas de negocio reales** (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`.
+
+> **CONSEJO**
+>
+> Prompt de ejemplo: Genera un proyecto Maven con Spring Boot 3 y Java 21: una API REST de gestión de tareas (entidad Task con id, título, descripción, estado, prioridad y fecha límite). Incluye endpoints CRUD, capa de servicio, validaciones con Bean Validation, manejo de errores con @RestControllerAdvice y tests unitarios con JUnit 5. Usa H2 en memoria por ahora.
+> **Requisitos mínimos** de la aplicación para considerarse "no trivial":
+>- Al menos una entidad de dominio con varios campos y validaciones.
+>- Operaciones CRUD completas (crear, leer, actualizar, borrar).
+>- Separación en capas (controlador / servicio / repositorio).
+>- Manejo de errores centralizado: un recurso inexistente devuelve **404**, no una traza de excepción.
+>- Al menos **5 tests que comprueben reglas de negocio reales** (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`
 
 
 ### Parte C — Construir y probar en local
@@ -145,7 +151,7 @@ git commit -m "chore: proyecto Maven inicial de la API de tareas"
 
 > **CONSEJO**
 >
-> El `.gitattributes` parece un detalle menor y es responsable de la mitad de los "a mí me funciona" del curso: sin él, un `.sh` guardado en Windows con finales `CRLF` falla dentro del contenedor Linux del [Boletín 3](boletin3-docker.html) con un error incomprensible.
+> Sin `.gitattributes` un `.sh` guardado en Windows con finales `CRLF` falla dentro del contenedor Linux del [Boletín 3](boletin3-docker.html) con un error raro.
 
 - Añade también un `.editorconfig` para que todos los editores usen la misma indentación:
 
@@ -174,7 +180,7 @@ git commit -m "chore(editor): añade .editorconfig"
 
 ```bash
 git switch -c feat/campo-prioridad
-# ... editar código ...
+# ... editar código con IA ...
 git add . && git commit -m "feat(tasks): añade campo prioridad a Task"
 ```
 
@@ -214,7 +220,7 @@ Añade **Spotless** al `pom.xml` para que el proyecto tenga un único estilo y s
 mkdir -p .githooks
 cat > .githooks/pre-commit <<'EOF'
 #!/bin/sh
-echo "Formateando con Spotless..."
+echo "Formatting with Spotless..."
 mvn -q spotless:apply || exit 1
 git add -u          # re-añade los archivos que Spotless haya reformateado
 EOF
@@ -239,56 +245,10 @@ git commit -m "chore(hooks): añade hook de pre-commit con Spotless"
 >
 > Los hooks viven en `.git/hooks/`, que **no se versiona**. Por eso los guardamos en `.githooks/` y apuntamos `core.hooksPath` ahí: así el hook viaja con el repositorio. Aun así, cada persona que clone debe ejecutar ese `git config` una vez; documéntalo en el README. Un hook local nunca sustituye a la comprobación en CI, porque siempre se puede saltar con `--no-verify`.
 
-### Parte F — Provocar y resolver un conflicto (obligatorio)
+### Parte F — Provocar y resolver un conflicto
 
 - Crea dos ramas a partir de `main` que modifiquen LA MISMA línea de un archivo de forma distinta.
 - Fusiona la primera en `main` (irá bien).
 - Fusiona la segunda: Git marcará el conflicto. Edítalo a mano eliminando los marcadores `<<<<<<<`, `=======`, `>>>>>>>` y deja la versión final correcta.
 - Cierra con `git add` y `git commit`.
-- Explica en el `AI_LOG.md` **por qué** Git no pudo resolverlo solo.
-
-## 4. Cierre de la sesión
-
-### Reto de depuración
-
-Un compañero te pasa este repositorio y te dice que "clona y compila". No compila. Diagnostica y arregla los tres problemas, y explica cada causa en una frase:
-
-- El repositorio pesa 180 MB y contiene la carpeta `target/` completa. ¿Cómo lo dejas fuera **y** cómo lo eliminas del seguimiento sin borrar los archivos locales?
-- El `pom.xml` declara `<maven.compiler.source>17</maven.compiler.source>` pero el código usa sintaxis de Java 21.
-- Hay un archivo `application.properties` con una contraseña real commiteada hace 5 commits. ¿Qué haces, además de borrarla del archivo actual?
-
-> **CONSEJO**
->
-> Para el primero: `git rm -r --cached target/`. Para el tercero: borrarla del archivo **no basta**, sigue en el historial; la respuesta correcta empieza por *rotar la credencial* y considerarla comprometida.
-
-### Antes de terminar
-
-- Actualiza `docs/AI_LOG.md` con al menos dos entradas de esta sesión (formato en el [Boletín 0](boletin0-guia-del-curso.html)).
-- Escribe un `README.md` mínimo: qué es el proyecto, cómo compilar, cómo arrancar y cómo activar los hooks.
-- Prepárate para el checkpoint: sabrás explicar qué hay en el índice, por qué existe `.gitattributes` y qué hace exactamente tu hook.
-
-## 6. Entrega del boletín
-
-> **ENTREGA**
->
-> Una carpeta de proyecto (aún local, sin GitHub todavía) que contiene:
-
-- Repositorio Git inicializado con `.gitignore`, `.gitattributes` y `.editorconfig` correctos.
-- `mvn clean package` termina con BUILD SUCCESS y genera el JAR.
-- La API arranca y responde a una petición de prueba, y devuelve 404 ante un recurso inexistente.
-- Al menos 5 tests con aserciones significativas; evidencia de que uno de ellos se pone rojo al romper el código.
-- Historial con **al menos 6 commits** siguiendo Conventional Commits, una rama de feature fusionada y **un conflicto resuelto** (visible en el log).
-- Spotless configurado y hook de pre-commit funcionando (con evidencia de un commit reformateado automáticamente).
-- `docs/AI_LOG.md` y `README.md`.
-
-## 7. Criterios de evaluación
-
-| Aspecto | Peso |
-|---|---|
-| La aplicación compila, empaqueta, arranca y maneja errores correctamente | 25% |
-| Estructura Maven correcta y archivos de configuración del repositorio (.gitignore, .gitattributes, .editorconfig) | 15% |
-| Uso de ramas y commits: historial legible con Conventional Commits | 20% |
-| Conflicto provocado y resuelto correctamente, con explicación de la causa | 15% |
-| Spotless + hook de pre-commit funcionando | 15% |
-| Diario de IA (docs/AI_LOG.md) con reflexión real | 10% |
-| Bonus — Ampliación: bisect, reflog, rebase interactivo, commits firmados | hasta +1,5 |
+- Explica **por qué** Git no pudo resolverlo solo.
