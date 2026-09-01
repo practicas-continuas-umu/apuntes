@@ -79,21 +79,17 @@ flowchart LR
 
 ### 2.3. Entrega
 
-La entrega de esta parte es **un único repositorio de GitHub** que crece sesión a sesión. Debe contener una carpeta `docs/` con **un archivo Markdown por sesión**, llamado `boletinX.md` (donde `X` es el número de sesión):
+La entrega de esta parte es **un único repositorio de GitHub** que crece sesión a sesión.
 
 ```text
 mi-repositorio/
-├── docs/
-│   ├── boletin1.md
-│   ├── boletin2.md
-│   └── ...
 ├── src/
 ├── pom.xml
 ├── Dockerfile
 └── .github/workflows/
 ```
 
-Cada `boletinX.md` debe incluir:
+ Paralelamente (y fuera del repositorio), cada sesión deberéis escribir en markdown una memoria de lo hecho (`boletinX.md` X = 1 ... 7). Cada `boletinX.md` debe incluir:
 
 1. **Una tabla resumen de los commits** de esa sesión: mensaje, descripción breve de lo hecho, autor y enlace al commit en GitHub.
 2. **Una explicación por commit**: qué se hizo y su relación con el boletín. Si se ha usado IA, indicar la herramienta y qué se le pidió.
@@ -127,6 +123,8 @@ Cada `boletinX.md` debe incluir:
 </details>
 
 ---
+
+Os recomiendo ir generando los boletines en un **repositorio independiente**. Al final de la asignatura, incorporaréis los boletines a una carpeta `docs/` dentro del repositorio de la API REST para generar una GitHub Page.
 
 ## 3. Proyecto global
 
