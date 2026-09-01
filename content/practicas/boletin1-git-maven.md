@@ -251,4 +251,3 @@ git commit -m "chore(hooks): añade hook de pre-commit con Spotless"
 - Fusiona la primera en `main` (irá bien).
 - Fusiona la segunda: Git marcará el conflicto. Edítalo a mano eliminando los marcadores `<<<<<<<`, `=======`, `>>>>>>>` y deja la versión final correcta.
 - Cierra con `git add` y `git commit`.
-- Explica **por qué** Git no pudo resolverlo solo.
