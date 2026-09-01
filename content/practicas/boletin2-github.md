@@ -65,7 +65,7 @@ Aprobar sin leer es peor que no revisar, porque da una falsa sensación de contr
 - **Legibilidad**: ¿lo entenderá alguien dentro de seis meses? El formato ya lo resuelve Spotless, no lo comentes.
 
 
-## 3. Trabajo práctico — Núcleo (obligatorio)
+## 3. Trabajo práctico
 
 ### Parte A — Publicar el repositorio
 
@@ -73,7 +73,7 @@ Aprobar sin leer es peor que no revisar, porque da una falsa sensación de contr
 - Conecta tu repo local con el remoto y haz el primer push:
 
 ```bash
-git remote add origin https://github.com/TU_USUARIO/tareas-api.git
+git remote add origin https://github.com/TU_USUARIO/repo.git
 git branch -M main
 git push -u origin main
 ```
@@ -107,15 +107,13 @@ Closes #
 ```bash
 # Toda la aplicación la revisa el equipo
 *               @tu_usuario @usuario_companero
-# Los workflows los revisa quien los mantiene
-/.github/       @tu_usuario
 ```
 
-- Crea etiquetas (`feature`, `bug`, `infra`, `docs`) y úsalas en tus Issues.
+- Crea [etiquetas](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels?utm_) (`feature`, `bug`, `infra`, `docs`) y úsalas en tus Issues.
 
-### Parte C — Trabajo por Pull Requests (núcleo de la sesión)
+### Parte C — Trabajo por Pull Requests
 
-Realiza al menos **TRES** ciclos completos de PR, cada uno aportando una mejora real a la API (un endpoint nuevo, una validación, un filtro de búsqueda, paginación…).
+Realiza al menos **DOS** ciclos completos de PR, cada uno aportando una mejora real a la API (un endpoint nuevo, una validación, un filtro de búsqueda, paginación...).
 
 **Ciclo de cada Pull Request:**
 
@@ -127,30 +125,16 @@ Realiza al menos **TRES** ciclos completos de PR, cada uno aportando una mejora 
 - Recibe la revisión, **responde a los comentarios** y sube commits de corrección a la misma rama.
 - Fusiona el PR con la estrategia que hayas elegido y borra la rama.
 
-> **OJO**
->
-> Un PR que se fusiona sin ningún comentario de revisión no cuenta como ciclo completo. Se evalúa la conversación: al menos uno de tus tres PRs debe contener un comentario que provoque un **cambio real** en el código antes del merge.
+Uno crea el PR y el otro lo revisa. Cada integrante debe crear al menos un PR y revisar al menos uno del compañero.
 
-### Parte D — Revisión cruzada (obligatoria)
 
-Ponte en pareja con un compañero y añadíos mutuamente como **colaboradores** del repositorio. Cada uno abre sus PRs y **revisa y aprueba los del otro**, usando el checklist del apartado 2.4.
-
-- Cada miembro debe dejar al menos **dos revisiones con comentarios en líneas concretas** en el repositorio del otro.
-- Al menos una revisión debe usar **"Request changes"**, no solo "Approve".
-- Rotad los roles: en un PR eres autor, en el siguiente revisor.
-
-> **CONSEJO**
->
-> Si trabajas sin pareja, la alternativa mínima es abrir los PRs desde una **cuenta secundaria** o pedir la revisión al profesor; la auto-revisión en solitario solo puntúa la mitad, porque no ejercita lo importante: explicar tu código a alguien que no lo escribió.
-
-### Parte E — Provocar un conflicto en un PR
+### Parte D — Provocar un conflicto en un PR
 
 - Crea dos ramas que modifiquen la misma zona de código.
 - Fusiona la primera vía PR.
 - Al intentar fusionar la segunda, GitHub avisará del conflicto. Resuélvelo (en la web, o trayendo `main` a tu rama con `git merge main` en local) y completa el PR.
 
-### Parte F — Proteger la rama main
-
+### Parte E — Proteger la rama main
 En **Settings → Branches** (o Rules → Rulesets), añade una regla de protección para `main`:
 
 - Requiere Pull Request antes de fusionar, con **al menos 1 aprobación**.
@@ -179,43 +163,3 @@ git push          # debe ser RECHAZADO por el servidor
 - **Reglas de nombres de rama** (rulesets) que solo permitan `feat/*`, `fix/*`, `chore/*`.
 - **Borrado automático de ramas** tras el merge (Settings → General) y `git fetch --prune` en local.
 - Escribe un `CONTRIBUTING.md` explicando el flujo del proyecto a alguien que llega nuevo.
-
-## 5. Cierre de la sesión
-
-### Reto de depuración
-
-- Tu compañero dice: *"he hecho push y mis cambios no aparecen en el PR"*. Su rama local se llama `feat/x` pero el PR apunta a `feature/x`. Explica qué ha pasado y cómo se arregla sin perder trabajo.
-- Un PR muestra **380 archivos modificados** cuando solo tocaste uno. Diagnostica la causa (pista: finales de línea y el `.gitattributes` del [Boletín 1](boletin1-git-maven.html)) y propón la solución.
-- Alguien ha fusionado a `main` un PR cuyo cambio hay que revertir, pero `main` está protegida. ¿Cómo lo deshaces correctamente? Compara `git revert` con `git reset --hard` y explica cuál es admisible en una rama compartida y por qué.
-
-### Antes de terminar
-
-- Actualiza `docs/AI_LOG.md` (mínimo dos entradas). Incluye una sobre el uso de IA **al revisar**: ¿te sugirió algún comentario de revisión? ¿era pertinente?
-- Checkpoint: sabrás explicar la diferencia entre `fetch` y `pull`, qué estrategia de merge elegiste y por qué, y qué hace exactamente `Closes #N`.
-
-## 6. Entrega del boletín
-
-> **ENTREGA**
->
-> El enlace a tu repositorio en GitHub, que debe mostrar:
-
-- `README.md` completo, con la política de merge justificada.
-- Plantillas de PR e Issue, `CODEOWNERS` y etiquetas en uso.
-- **Al menos 3 Pull Requests** fusionados, cada uno con su Issue enlazado.
-- Al menos **2 revisiones cruzadas** hechas por ti en el repositorio de tu pareja (enlaces), y al menos un PR tuyo donde un comentario haya provocado un cambio.
-- Un PR con un **conflicto resuelto**.
-- La rama `main` **protegida**, con evidencia de un push directo rechazado.
-- Historial de ramas de feature creadas y borradas tras el merge.
-- `docs/AI_LOG.md` actualizado.
-
-## 7. Criterios de evaluación
-
-| Aspecto | Peso |
-|---|---|
-| Flujo de PRs correcto (rama → PR → revisión → merge), 3 ciclos completos | 30% |
-| Calidad de las revisiones cruzadas: comentarios concretos que mejoran el código | 25% |
-| Conflicto resuelto dentro de un PR | 10% |
-| Branch protection (incl. resolución de conversaciones) y política de merge justificada | 15% |
-| Gobernanza: plantillas, CODEOWNERS, Issues enlazados y README | 10% |
-| Diario de IA (docs/AI_LOG.md) con reflexión real | 10% |
-| Bonus — Ampliación: Projects, commits verificados, rulesets, CONTRIBUTING.md | hasta +1,5 |
