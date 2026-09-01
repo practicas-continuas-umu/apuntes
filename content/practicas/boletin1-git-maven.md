@@ -107,13 +107,17 @@ Pide a una IA que genere una **API REST con Spring Boot y Maven**, con persisten
 
 > **CONSEJO**
 >
-> Prompt de ejemplo: Genera un proyecto Maven con Spring Boot 3 y Java 21: una API REST de gestión de tareas (entidad Task con id, título, descripción, estado, prioridad y fecha límite). Incluye endpoints CRUD, capa de servicio, validaciones con Bean Validation, manejo de errores con @RestControllerAdvice y tests unitarios con JUnit 5. Usa H2 en memoria por ahora.
+> Prompt de ejemplo: Genera un proyecto Maven con Spring Boot 3 y Java 21: una API REST de gestión de tareas (entidad `Task` con id, título, descripción, estado, prioridad y fecha límite). Usa Spring Data JPA con Hibernate para la persistencia y H2 en memoria como base de datos. Incluye endpoints CRUD, capa de servicio, repositorio JPA, validaciones con Bean Validation, manejo de errores con `@RestControllerAdvice` y tests unitarios con JUnit 5.
+>
 > **Requisitos mínimos** de la aplicación para considerarse "no trivial":
->- Al menos una entidad de dominio con varios campos y validaciones.
->- Operaciones CRUD completas (crear, leer, actualizar, borrar).
->- Separación en capas (controlador / servicio / repositorio).
->- Manejo de errores centralizado: un recurso inexistente devuelve **404**, no una traza de excepción.
->- Al menos **5 tests que comprueben reglas de negocio reales** (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`
+>
+> * Al menos una entidad de dominio con varios campos y validaciones.
+> * Persistencia mediante Spring Data JPA/Hibernate.
+> * Operaciones CRUD completas (crear, leer, actualizar, borrar).
+> * Separación en capas (controlador / servicio / repositorio).
+> * Manejo de errores centralizado: un recurso inexistente devuelve 404, no una traza de excepción.
+> * Al menos 5 tests que comprueben reglas de negocio reales (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`.
+
 
 
 ### Parte C — Construir y probar en local
