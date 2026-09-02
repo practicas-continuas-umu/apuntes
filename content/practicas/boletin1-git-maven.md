@@ -37,7 +37,7 @@ Maven es a la vez un **gestor de dependencias** (descarga las librerías que tu 
 | mvn compile | Compila el código fuente. |
 | mvn test | Compila y ejecuta los tests unitarios. |
 | mvn package | Empaqueta el resultado en un JAR (incluye compile + test). |
-| mvn verify | Ejecuta también los tests de integración y las comprobaciones de calidad. |
+| mvn verify | Ejecuta también los tests de integración y las comprobaciones de calidad (compile + test + package + integration tests) |
 | mvn clean | Borra lo construido previamente (carpeta target/). |
 
 > **CONSEJO**
@@ -117,6 +117,7 @@ Pide a una IA que genere una **API REST con Spring Boot y Maven**, con persisten
 > * Separación en capas (controlador / servicio / repositorio).
 > * Manejo de errores centralizado: un recurso inexistente devuelve 404, no una traza de excepción.
 > * Al menos 5 tests que comprueben reglas de negocio reales (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`.
+> * No debe incluir tests de integración que levanten el contexto de la aplicación y/o una base de datos. Solo debe incluir tests unitarios.
 
 
 

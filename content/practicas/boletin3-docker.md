@@ -205,5 +205,7 @@ Un *dev container* define el entorno de desarrollo como código: quien clone el 
 
 - Investiga y explica qué indica cada campo.
 - En VS Code, hay una extensión llamada "Dev Containers" que te permite abrir el proyecto en un contenedor de desarrollo.
+- Inicia el `docker compose up` dentro del dev container y comprueba que la API funciona.
 
+Esto es útil para que todos los miembros del equipo tengan el mismo entorno de desarrollo. No obstante, si lo tenéis todo instalado en la máquina local, no es obligatorio usarlo.
 
