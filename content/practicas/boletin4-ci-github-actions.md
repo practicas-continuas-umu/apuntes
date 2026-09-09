@@ -35,12 +35,6 @@ Un workflow es un archivo YAML en `.github/workflows/`. Sus piezas:
 | permissions | Qué puede hacer el token del workflow. Por defecto, más de lo necesario: acótalo. |
 | concurrency | Agrupa ejecuciones para poder cancelar las obsoletas de la misma rama. |
 
-### 2.3 Testcontainers frente a service containers
-
-Grosso modo, hay dos formas de tener una base de datos real durante los tests:
-
-- **Service containers**: los declara el propio workflow. Funcionan bien, pero solo existen en el CI: en tu portátil los tests siguen necesitando que tú levantes Postgres a mano.
-- **Testcontainers**: una librería que arranca el contenedor **desde el propio test**. El mismo test funciona idéntico en tu máquina y en el runner, y cada ejecución parte de una base limpia.
 
 ## 3. Trabajo práctico
 
@@ -154,8 +148,8 @@ jobs:
 - Verifica el resultado: abre un PR con un test roto y comprueba que GitHub impide fusionarlo.
 
 
-### Parte E — Ampliaciones interesantes (opcionales)
+### Parte E — Ampliaciones interesantes
 
 - Modifica el workflow para que se ignoren los cambios en el README.
-- Genera un workflow tal que, cada vez que se haga un pull request, se ejecute una revisión de código por parte de una IA de manera que genere un resumen en lenguaje natural de qué se ha cambiado. Recomiendo algún modelo potente de Ollama Cloud. El API token se tiene que gestionar con secretos (no se puede hacer push de un secreto al repositorio). Si hay algún error, el comentario debe indicar: "La IA ha fallado".
+- **Gestión de secretos**: Genera un workflow tal que, cada vez que se haga un pull request, se ejecute una revisión de código por parte de una IA de manera que genere un resumen en lenguaje natural de qué se ha cambiado. Recomiendo algún modelo potente de Ollama Cloud. El API token se tiene que gestionar con secretos (no se puede hacer push de la API token al repositorio). Si hay algún error, el comentario debe indicar: "La IA ha fallado".
 - Añade un badge del estado del CI al README.
