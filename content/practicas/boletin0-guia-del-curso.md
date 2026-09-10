@@ -45,7 +45,7 @@ El grueso de la nota (SE2) se reparte entre los tres bloques de trabajo que desc
 ```mermaid
 flowchart TD
     SE2["SE2 · Informes, trabajos y proyectos (80 %)"]
-    SE2 --> A["<b>Boletines en parejas</b><br/>7 sesiones · 1 repositorio<br/>API REST Java + CI/CD + Ansible"]
+    SE2 --> A["<b>Boletines en parejas</b><br/>6 sesiones · 1 repositorio<br/>API REST Java + CI/CD + Ansible"]
     SE2 --> B["<b>Proyecto global</b><br/>Toda la clase · 1 repo por grupo<br/>Microservicios + frontend"]
     SE2 --> C["<b>Enunciado común</b><br/>Grupos de trabajo<br/>Pipeline de CI + pipeline de despliegue"]
 ```
@@ -56,13 +56,13 @@ flowchart TD
 
 ### 2.1. Qué se construye
 
-A lo largo de **siete sesiones** se construye, de forma **incremental**, una **API REST en Java (Spring Boot)**: gestionada con Maven, contenerizada con Docker, validada por un pipeline de CI/CD en GitHub Actions y desplegada automáticamente con Ansible.
+A lo largo de **seis sesiones** se construye, de forma **incremental**, una **API REST en Java (Spring Boot)**: gestionada con Maven, contenerizada con Docker, validada por un pipeline de CI/CD en GitHub Actions y desplegada automáticamente con Ansible.
 
 Cada boletín parte del resultado del anterior; no son ejercicios independientes.
 
 ```mermaid
 flowchart LR
-    B1["1<br/>Git + Maven"] --> B2["2<br/>GitHub + PRs"] --> B3["3<br/>Docker"] --> B4["4<br/>CI"] --> B5["5<br/>CD"] --> B6["6<br/>Pipeline robusto"] --> B7["7<br/>Ansible"]
+    B1["1<br/>Git + Maven"] --> B2["2<br/>GitHub + PRs"] --> B3["3<br/>Docker"] --> B4["4<br/>CI"] --> B5["5<br/>CD"] --> B6["6<br/>Ansible"]
 ```
 
 ### 2.2. Boletines
@@ -74,8 +74,7 @@ flowchart LR
 | [3](boletin3-docker.html) | Docker: contenerizar la aplicación |
 | [4](boletin4-ci-github-actions.html) | Integración Continua con GitHub Actions |
 | [5](boletin5-cd-github-actions.html) | Entrega Continua: construir, versionar y publicar la imagen |
-| [6](boletin6-pipeline-robusto.html) | Pipeline robusto: calidad, seguridad y cadena de suministro |
-| [7](boletin7-ansible.html) | Despliegue con Ansible |
+| [6](boletin6-ansible.html) | Despliegue con Ansible |
 
 ### 2.3. Entrega
 
@@ -89,7 +88,7 @@ mi-repositorio/
 └── .github/workflows/
 ```
 
- Paralelamente (y fuera del repositorio), cada sesión deberéis escribir en markdown una memoria de lo hecho (`boletinX.md` X = 1 ... 7). Cada `boletinX.md` debe incluir:
+ Paralelamente (y fuera del repositorio), cada sesión deberéis escribir en markdown una memoria de lo hecho (`boletinX.md` X = 1 ... 6). Cada `boletinX.md` debe incluir:
 
 1. **Una tabla resumen de los commits** de esa sesión: mensaje, descripción breve de lo hecho, autor y enlace al commit en GitHub.
 2. **Una explicación por commit**: qué se hizo y su relación con el boletín. Si se ha usado IA, indicar la herramienta y qué se le pidió.
@@ -261,7 +260,7 @@ Al finalizar la asignatura se entrega:
 
 | Bloque | Modalidad | Entregable |
 |---|---|---|
-| Boletines | Parejas | Un repositorio de GitHub con `docs/boletin1.md` … `docs/boletin7.md` |
+| Boletines | Parejas | Un repositorio de GitHub con `docs/boletin1.md` … `docs/boletin6.md` |
 | Proyecto global | Grupo (repo) + individual (contribuciones) | Repositorio del microservicio o frontend + contribuciones y revisiones de cada estudiante |
 | Enunciado común | Grupo | Memoria (CI + despliegue) y repositorio público con los pipelines |
 
@@ -296,8 +295,8 @@ gantt
     Boletín 1                  :b1,   2026-09-21, 7d
     Boletín 2                  :b2,   2026-09-28, 7d
     Boletín 3                  :b3,   2026-10-05, 7d
-    Boletines 4, 5 y 6         :b456, 2026-10-19, 7d
-    Boletín 7                  :b7,   2026-10-26, 7d
+    Boletines 4 y 5             :b45,  2026-10-19, 7d
+    Boletín 6                  :b6,   2026-10-26, 7d
  
     section Proyecto global
     Desarrollo del proyecto global :active, pg, 2026-09-28, 2026-11-02

@@ -138,3 +138,16 @@ curl http://localhost:8080/actuator/health   # debe responder UP
 > Si el package se crea como privado, puedes hacerlo público desde su configuración para probar el pull sin autenticarte. También puedes logearte en el registro con `docker login ghcr.io` y luego hacer el pull. El usuario es tu nombre de GitHub y la contraseña es un **Personal Access Token**.
 
 
+### Parte D — GitHub Pages de la documentación
+
+Como dice el [Boletín 0](boletin0-guia-del-curso.html), has ido guardando la memoria de cada sesión (`boletinX.md`) en un repositorio/carpeta aparte. Toca traerla al repositorio de la API y publicarla como una web navegable.
+
+- Copia (o mueve) tus `boletinX.md` desde el repositorio donde los tenías a una carpeta `docs/` en la raíz del repositorio de la API, uno por sesión entregada hasta ahora (`docs/boletin1.md` … `docs/boletin5.md`).
+- Dentro de `docs/`, escribe un script (node o python) que lea todos los `.md` de `docs/` y genere, para cada uno, un `.html` equivalente más un `index.html` que enlace a todos.  Deben guardarse en `docs/site/`. Recomiendo usar la IA para esto.
+- Prueba el script en local y revisa el resultado abriendo el HTML en el navegador.
+- Automatízalo con un workflow `.github/workflows/pages.yml` que, en cada push a `main`, ejecute el script y publique `site/` en GitHub Pages con las acciones oficiales.
+- Para tener GitHub Pages funcionando, el repositorio debe ser público.
+- En **Settings → Pages**, cambia **Source** a **GitHub Actions**.
+- Añade `docs/site/` en el `.gitignore` para que no se suba al repositorio.
+- Comprueba que la web se publica correctamete (es la documentación que vas a entregar).
+

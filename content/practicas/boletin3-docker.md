@@ -102,7 +102,7 @@ docker run -p 8080:8080 tareas-api:0.1
 
 ### Parte C — Endpoint de salud
 
-Añade Spring Boot Actuator y expón únicamente lo necesario. Este endpoint lo usarán después el healthcheck de Compose (Parte D), el pipeline ([Boletín 4](boletin4-ci-github-actions.html)) y el despliegue ([Boletín 7](boletin7-ansible.html)):
+Añade Spring Boot Actuator y expón únicamente lo necesario. Este endpoint lo usarán después el healthcheck de Compose (Parte D), el pipeline ([Boletín 4](boletin4-ci-github-actions.html)) y el despliegue ([Boletín 6](boletin6-ansible.html)):
 
 ```xml
 <!-- pom.xml -->
@@ -175,7 +175,7 @@ curl -X GET ...
 
 > **OJO**
 >
-> La contraseña en texto plano del Compose es solo para desarrollo local. **Nunca** se suben credenciales reales al repositorio. En el [Boletín 5](boletin5-cd-github-actions.html) verás cómo gestionar secretos correctamente.
+> La contraseña en texto plano del Compose es solo para desarrollo local. **Nunca** se suben credenciales reales al repositorio. En el [Boletín 6](boletin6-ansible.html) verás cómo protegerlas de verdad con Ansible Vault.
 
 ### Parte E — Versionar los cambios
 
