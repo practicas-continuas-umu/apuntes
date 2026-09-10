@@ -46,7 +46,7 @@ Ansible no necesita instalar nada permanente en la máquina destino: se conecta 
 
 Es el error más común y el más caro. Si el playbook despliega `:latest` no puedes responder a la pregunta *"¿qué versión está corriendo?"*, no puedes reproducir un despliegue pasado y no puedes volver atrás. Además destruye la idempotencia real: cada ejecución tiene que ir al registro a comprobar si `latest` cambió. Desplegaremos siempre por un **tag inmutable** (`1.2.0` o `sha-abc1234`), que es exactamente para lo que los creaste en el [Boletín 5](boletin5-cd-github-actions.html).
 
-## 3. Trabajo práctico — Núcleo (obligatorio)
+## 3. Trabajo práctico
 
 ### Parte A — Instalar Ansible y sus dependencias
 
@@ -72,9 +72,6 @@ collections:
 # se instala con:  ansible-galaxy collection install -r deploy/requirements.yml
 ```
 
-> **OJO**
->
-> Los módulos `community.docker.*` se ejecutan **en la máquina destino** y necesitan el SDK de Python de Docker allí. Es el fallo número uno de esta sesión (`Failed to import the required Python library (Docker SDK for Python)`): la Parte D lo instala explícitamente como primera tarea.
 
 ### Parte B — Preparar la flota de servidores destino
 
@@ -112,7 +109,7 @@ services:
 
 > **CONSEJO**
 >
-> El objetivo didáctico es tener varias máquinas Linux a las que Ansible pueda entrar por SSH. Cómo las consigas (contenedores como aquí, VMs con Vagrant o multipass, Raspberry Pis, instancias del free tier de una nube) es secundario; el playbook será el mismo. Si prefieres montar el socket de Docker del anfitrión en cada una en vez de `privileged: true`, documenta esa alternativa.
+> El objetivo didáctico es tener varias máquinas Linux a las que Ansible pueda entrar por SSH. Cómo las consigas (contenedores como aquí, VMs con Vagrant o multipass, Raspberry Pis, instancias del free tier de una nube) es secundario; el playbook será el mismo. 
 
 - Levanta la flota y comprueba que puedes entrar por SSH manualmente en cada máquina antes de usar Ansible:
 
@@ -127,7 +124,7 @@ ssh root@localhost -p 2225   # db1
 
 ### Parte C — El inventario
 
-Ya no hay un único servidor: el inventario agrupa las máquinas **por rol**. Crea `deploy/inventory.ini`:
+El inventario agrupa las máquinas **por rol**. Crea `deploy/inventory.ini`:
 
 ```ini
 [app]
@@ -147,7 +144,6 @@ ansible_password=root
 ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 ```
 
-`servidores` no tiene máquinas propias: agrupa `app` y `db` para poder aplicarles algo en común (Parte D, primer play) sin repetirlo dos veces.
 
 > **OJO**
 >
