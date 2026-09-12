@@ -18,7 +18,7 @@ title: "Boletín 4: Integración Continua con GitHub Actions"
 
 ## 2. Conceptos clave
 
-### 2.1 Qué es (y qué no es) la CI
+### 2.1 Qué es la CI
 
 La esencia de la Integración Continua es **integrar cambios pequeños y frecuentes a `main`, validándolos automáticamente**, de modo que los problemas se detecten en minutos y no en días. El objetivo último es que `main` esté siempre sana.
 

@@ -123,7 +123,9 @@ mi-repositorio/
 
 ---
 
-Os recomiendo ir generando los boletines en un **repositorio independiente**. Al final de la asignatura, incorporaréis los boletines a una carpeta `docs/` dentro del repositorio de la API REST para generar una GitHub Page.
+Os recomiendo ir generando los boletines en un **repositorio independiente** (o en una carpeta drive). Al final de la asignatura, incorporaréis los boletines a una carpeta `docs/` dentro del repositorio de la API REST para generar una GitHub Page.
+
+Los `.md` se entregarán semanalmente a través del aula virtual. Se evaluará al final, pero esto cuenta para la nota de seguimiento (SE1).
 
 ## 3. Proyecto global
 
@@ -203,6 +205,8 @@ En **todos** los casos se realizan **5 mediciones** y se toma la **mediana**.
 |---|---|
 | **MergeSort** | Las entradas se generan aleatoriamente |
 | **QuickSort** | Las entradas se generan aleatoriamente |
+| **InsertionSort** | Las entradas se generan aleatoriamente |
+| **SelectionSort** | Las entradas se generan aleatoriamente |
 | **Fibonacci** | Implementación con programación dinámica |
 | **Multiplicación de matrices** | — |
 
@@ -230,8 +234,15 @@ flowchart LR
 
 Para aprobar esta parte, **cada estudiante** debe:
 
-- [ ] Realizar una **contribución no trivial** (que implique escribir código, no vale editar el `README`) **a cada microservicio que no sea el suyo**.
-- [ ] Realizar una **revisión de código** de al menos un pull request **de su propio repositorio**.
+- Realizar una **contribución no trivial** (que implique escribir código, no vale editar el `README`) **a un microservicio que no sea el suyo**.
+- Realizar una **revisión de código** de al menos un pull request **de su propio repositorio**.
+
+### 3.8. Evaluación
+
+Tres niveles:
+- **Individual** (50%): contribuciones y revisiones de cada estudiante.
+- **Grupo** (30%): calidad del microservicio o frontend entregado.
+- **Global** (20%): integración de todos los microservicios y frontend, y que la aplicación completa funcione correctamente.
 
 ---
 
@@ -246,6 +257,8 @@ Reflexionar sobre cómo aplicar al proyecto común las tecnologías de Práctica
 ### 4.2. Pipeline de despliegue (diseño)
 
 Reflexionar sobre cómo aplicar al proyecto común las tecnologías de Cloud vistas en la asignatura. Hay que **justificar qué tecnologías se van a utilizar y cuáles no**, y explicar cómo se integrarían en un pipeline.
+
+Esta parte la corrige el otro profesor de la asignatura y *no forma parte de la primera parte de la asignatura*.
 
 ### 4.3. Entrega
 
