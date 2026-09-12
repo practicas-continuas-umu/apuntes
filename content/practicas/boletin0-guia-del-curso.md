@@ -125,7 +125,9 @@ mi-repositorio/
 
 Os recomiendo ir generando los boletines en un **repositorio independiente** (o en una carpeta drive). Al final de la asignatura, incorporaréis los boletines a una carpeta `docs/` dentro del repositorio de la API REST para generar una GitHub Page.
 
-Los `.md` se entregarán semanalmente a través del aula virtual. Se evaluará al final, pero esto cuenta para la nota de seguimiento (SE1).
+Los `.md` se entregarán semanalmente a través del aula virtual. **Se evaluará al final, pero esto cuenta para la nota de seguimiento (SE1).**
+
+Al finalizar la asignatura, se entregará el **link al repositorio de GitHub** y el link al **GitHub Page** generada a partir de los boletines.
 
 ## 3. Proyecto global
 
@@ -244,6 +246,10 @@ Tres niveles:
 - **Grupo** (30%): calidad del microservicio o frontend entregado.
 - **Global** (20%): integración de todos los microservicios y frontend, y que la aplicación completa funcione correctamente.
 
+### 3.9. Entrega
+
+Al finalizar la asignatura, se entregará el link a los repositorios de cada grupo.
+
 ---
 
 ## 4. Proyecto asociado al enunciado común
@@ -285,6 +291,7 @@ El uso de asistentes de IA (ChatGPT, Claude, Copilot, Gemini…) está **permiti
 
 1. **Revisar siempre** lo generado antes de incorporarlo.
 2. **Declarar el uso** en los boletines: qué herramienta se ha usado y qué se le ha pedido.
+3. **Entender lo generado**: especialmente para artefactos que tengan que ver con la asignatura (pipelines, docker, etc.).
 
 Se recomienda Claude Code, GitHub Copilot o Codex, con sus respectivas extensiones en VS Code.
 
