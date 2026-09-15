@@ -338,10 +338,10 @@ gantt
     Boletín 6                  :b6,   2026-10-26, 7d
  
     section Proyecto global
-    Desarrollo del proyecto global :active, pg, 2026-09-28, 2026-11-02
+    Desarrollo del proyecto global… :active, pg, 2026-09-28, 2026-11-02
  
     section Enunciado común
-    Desarrollo CI             :active, pc, 2026-09-28, 2026-11-02
+    Desarrollo CI…             :active, pc, 2026-09-28, 2026-11-02
  
     section Calendario
     S1 (21 sep)                :milestone, m1, 2026-09-21, 0d
