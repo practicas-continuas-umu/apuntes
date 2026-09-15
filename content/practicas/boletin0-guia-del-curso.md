@@ -1,12 +1,12 @@
 ---
-title: "Boletín 0: Guía de la primera parte de la asignatura"
+title: "Boletín 0: Guía de la asignatura"
 ---
 
-# Boletín 0 · Guía de la primera parte de la asignatura
+# Boletín 0 · Guía de la asignatura
 
 > **Objetivo de este documento**
 >
-> Explicar **cómo se evalúa** la primera parte de la asignatura y **qué hay que entregar** en cada uno de sus tres bloques de trabajo: los *boletines en parejas*, el *proyecto global* y el *proyecto asociado al enunciado común*.
+> Explicar **cómo se evalúa** la asignatura (especialmente, la primera parte) y **qué hay que entregar** en cada uno de sus tres bloques de trabajo: los *boletines en parejas*, el *proyecto global* y el *proyecto asociado al enunciado común*.
 
 ---
 
@@ -45,14 +45,21 @@ El grueso de la nota (SE2) se reparte entre los tres bloques de trabajo que desc
 ```mermaid
 flowchart TD
     SE2["SE2 · Informes, trabajos y proyectos (80 %)"]
-    SE2 --> A["<b>Boletines en parejas</b><br/>6 sesiones · 1 repositorio<br/>API REST Java + CI/CD + Ansible"]
-    SE2 --> B["<b>Proyecto global</b><br/>Toda la clase · 1 repo por grupo<br/>Microservicios + frontend"]
-    SE2 --> C["<b>Enunciado común</b><br/>Grupos de trabajo<br/>Pipeline de CI + pipeline de despliegue"]
+    SE2 --> A["<b>Boletines en parejas (4 puntos)</b><br/>12 boletines"]
+    SE2 --> B["<b>Proyecto global (2 puntos)</b><br/>Toda la clase · 1 repo por grupo<br/>Microservicios + frontend"]
+    SE2 --> C["<b>Enunciado común (2 puntos)</b><br/>Grupos de trabajo<br/>Pipeline de CI + pipeline de despliegue"]
 ```
 
 ---
 
-## 2. Boletines en parejas
+## 2. Boletines
+
+Modalidades:
+- **Primera sesión, primera parte de la asignatura**: boletín individual.
+- **Segunda sesión en adelante, primera parte de la asignatura**: boletines en parejas.
+- **Segunda parte de la asignatura**: boletines en grupos (mismos grupos que el proyecto común).
+
+El resto de la sección se centra en los **boletines de la primera parte de la asignatura**.
 
 ### 2.1. Qué se construye
 
@@ -114,20 +121,28 @@ mi-repositorio/
 - **Relación con el boletín:** apartado X ...
 - **Uso de IA:** herramienta y prompt utilizado (o "no se ha usado").
 
-## Evidencias adicionales
+## Descripción narrativa de lo hecho en la sesión y relación con los commits
 
-<!-- Capturas de pantalla de lo que no queda reflejado en commits -->
+### Parte A
+
+...
+
+### Parte B
+
+...
+
+<!-- Incluir capturas de pantalla de lo que no queda reflejado en commits -->
 ```
 
 </details>
 
 ---
 
-Os recomiendo ir generando los boletines en un **repositorio independiente** (o en una carpeta drive). Al final de la asignatura, incorporaréis los boletines a una carpeta `docs/` dentro del repositorio de la API REST para generar una GitHub Page.
+Os recomiendo ir generando los `.md` en un **repositorio independiente** (o en una carpeta drive). Al final de la asignatura, incorporaréis los boletines a una carpeta `docs/` dentro del repositorio de la API REST para generar una GitHub Page.
 
 Los `.md` se entregarán semanalmente a través del aula virtual. **Se evaluará al final, pero esto cuenta para la nota de seguimiento (SE1).**
 
-Al finalizar la asignatura, se entregará el **link al repositorio de GitHub** y el link al **GitHub Page** generada a partir de los boletines.
+Al finalizar la primera parte de la asignatura, se entregará el **link al repositorio de GitHub** y el link al **GitHub Page** generada a partir de los boletines.
 
 ## 3. Proyecto global
 
@@ -183,7 +198,7 @@ Todas las REST APIs deben seguir **el mismo contrato de entrada y salida** para 
 // POST /api/v1/benchmark
 // Petición
 {
-  "algorithm": "mergesort",   // mergesort | quicksort | fibonacci | matmul
+  "algorithm": "mergesort",   // mergesort | quicksort | fibonacci | matmul | ...
   "size": 10000
 }
 ```
@@ -260,7 +275,7 @@ Los grupos de trabajo deben abordar **dos pipelines** relacionados con el MVP de
 
 Reflexionar sobre cómo aplicar al proyecto común las tecnologías de Prácticas Continuas vistas en la asignatura. Hay que **seleccionar herramientas concretas** e **instanciarlas** para automatizar parte del desarrollo de la aplicación.
 
-### 4.2. Pipeline de despliegue (diseño)
+### 4.2. Pipeline de despliegue
 
 Reflexionar sobre cómo aplicar al proyecto común las tecnologías de Cloud vistas en la asignatura. Hay que **justificar qué tecnologías se van a utilizar y cuáles no**, y explicar cómo se integrarían en un pipeline.
 
@@ -271,7 +286,7 @@ Esta parte la corrige el otro profesor de la asignatura y *no forma parte de la 
 Al finalizar la asignatura se entrega:
 
 - Una **memoria** con los dos apartados anteriores **claramente diferenciados**.
-- Un **enlace al repositorio público** con la implementación de dichos pipelines.
+- Un **enlace al repositorio público** con la **implementación funcional de dichos pipelines**.
 
 ---
 
@@ -294,6 +309,10 @@ El uso de asistentes de IA (ChatGPT, Claude, Copilot, Gemini…) está **permiti
 3. **Entender lo generado**: especialmente para artefactos que tengan que ver con la asignatura (pipelines, docker, etc.).
 
 Se recomienda Claude Code, GitHub Copilot o Codex, con sus respectivas extensiones en VS Code.
+
+> **OJO**
+>
+> Los commits tienen que estar **firmados con el nombre del estudiante** que los realiza. No debe de haber commits hechos por la IA.
 
 
 ## 7. Cronograma
