@@ -121,3 +121,53 @@ section.divider h1 {
   border-bottom: none;
   font-size: 2em;
 }
+
+/* Diagramas Mermaid (ver MERMAID_PAN_ZOOM_SCRIPT en scripts/build.mjs). */
+pre.mermaid {
+  background: none;
+  border: none;
+  text-align: center;
+  /* Deja hueco arriba para que la barra +/-/reset no tape el diagrama. */
+  padding-top: 2.2rem;
+}
+
+pre.mermaid.mz-wrap {
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+pre.mermaid.mz-wrap.mz-dragging {
+  cursor: grabbing;
+}
+
+pre.mermaid .mz-svg {
+  transform-origin: center center;
+  display: block;
+  margin: 0 auto;
+}
+
+.mz-toolbar {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.mz-toolbar button {
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 1px solid #d7dde3;
+  background: #ffffff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0;
+}
+
+.mz-toolbar button:hover {
+  background: #f0f2f4;
+}
