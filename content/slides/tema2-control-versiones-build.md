@@ -209,6 +209,51 @@ Tras editar y resolver: `git add <archivo>` y `git commit -m "fusionado"`.
 
 ---
 
+## Caso 1: *fast-forward*
+
+`main` no tiene commits nuevos desde que se creó `feature`: Git simplemente **mueve el puntero**, sin crear un commit de *merge*.
+
+```text
+Antes:                          Después de `git merge feature`:
+
+    A---B  ← main                   A---B---C---D
+         \                                      ↑
+          C---D  ← feature               main, feature
+```
+
+---
+
+## Caso 2: *merge* sin conflicto
+
+`main` ha avanzado, pero nadie ha tocado las mismas líneas: Git combina ambas historias en un **nuevo commit de fusión** (dos padres).
+
+```text
+Antes:                           Después de `git merge feature`:
+
+          C---D  ← feature                 C---D
+         /                                 /     \
+    A---B---E---F  ← main             A---B---E---F---M  ← main
+                                                    (feature no se mueve)
+```
+
+---
+
+## Caso 3: *merge* con conflicto
+
+Mismo punto de partida que el caso anterior, pero `main` y `feature` han tocado las **mismas líneas**: el *merge* se interrumpe y no se crea ningún commit todavía.
+
+```text
+Antes (igual que caso 2):                Tras resolver a mano y confirmar:
+
+          C---D  ← feature                         C---D
+         /                                         /     \
+    A---B---E---F  ← main                     A---B---E---F---M  ← main
+                                                                (commit manual)
+    ⚠ merge interrumpido, sin commit
+```
+
+---
+
 ## Interacción con el repositorio remoto
 
 - `git push origin <rama>`: envía los commits locales al remoto.
