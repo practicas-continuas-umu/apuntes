@@ -184,8 +184,8 @@ Ejemplos:
 
 # ¿Y ahora qué?
 
-- **Tema 2**: control de versiones y build tools 
-- **Tema 3**: colaboración en GitHub
-- **Tema 4**: contenedorización
-- **Tema 5**: CI/CD
-- **Tema 6**: IaC con Ansible
+- Tema 2: control de versiones y build tools 
+- Tema 3: colaboración en GitHub
+- Tema 4: contenedorización
+- Tema 5: CI/CD
+- Tema 6: IaC con Ansible
