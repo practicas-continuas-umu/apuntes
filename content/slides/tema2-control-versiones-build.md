@@ -565,4 +565,4 @@ Maven nos da una construcción reproducible del artefacto.
 
 Ambos son la base sobre la que se construyen los *pipelines* CI/CD (Tema 5).
 
-👉 **Práctica 1: Git y Maven**
+👉 Práctica 1: Git y Maven

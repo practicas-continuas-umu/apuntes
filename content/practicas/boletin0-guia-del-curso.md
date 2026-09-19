@@ -182,7 +182,7 @@ Cada grupo es responsable de **preparar toda la infraestructura y el repositorio
 
 | # | Grupo de una REST API | Grupo del frontend |
 |---|---|---|
-| 1 | REST API funcional en su lenguaje, con **un único algoritmo** implementado | Frontend funcional con **mocks** que imiten a los microservicios |
+| 1 | REST API funcional en su lenguaje, con **un único algoritmo (MergeSort)** implementado | Frontend funcional con **mocks** que imiten a los microservicios |
 | 2 | Pipeline de **CI/CD**: testear, construir, versionar y publicar la imagen | Pipeline de **CI** con tests unitarios y, cuando existan los microservicios, tests de integración de la app completa |
 | 3 | Conjunto de **issues** para que los resuelvan miembros de otros equipos (p. ej. un issue por algoritmo pendiente) | Conjunto de **issues** para otros equipos (aspectos estilísticos, funcionalidad adicional como gráficas, etc.) |
 | 4 | `README.md` con instrucciones de uso y despliegue | `README.md` con instrucciones de uso y despliegue |
@@ -350,4 +350,5 @@ gantt
     Festivo · sin sesión       :crit, milestone, m0, 2026-10-12, 0d
     S4 (19 oct)                :milestone, m4, 2026-10-19, 0d
     S5 (26 oct)                :milestone, m5, 2026-10-26, 0d
+    Entrega boletines 1ª parte :crit, milestone, meb, 2026-11-01, 0d
 ```

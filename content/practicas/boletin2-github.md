@@ -10,7 +10,7 @@ title: "Boletín 2: GitHub y colaboración con Pull Requests"
 
 ## 1. Objetivos de la sesión
 
-- **Publicar el repositorio** en GitHub y entender la relación local ↔ remoto.
+- **Publicar el repositorio** en GitHub (**repositorio público**) y entender la relación local ↔ remoto.
 - **Dominar el flujo de Pull Requests** (GitHub Flow): rama → PR → revisión → merge.
 - **Revisar el código de otra persona**.
 - **Usar Issues, plantillas y CODEOWNERS** para organizar el trabajo.
