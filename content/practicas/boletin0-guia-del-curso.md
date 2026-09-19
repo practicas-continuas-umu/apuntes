@@ -144,6 +144,8 @@ Los `.md` se entregarán semanalmente a través del aula virtual. **Se evaluará
 
 Al finalizar la primera parte de la asignatura, se entregará el **link al repositorio de GitHub** y el link al **GitHub Page** generada a partir de los boletines.
 
+> Fecha tope de entrega: **2 de noviembre de 2026**.
+
 ## 3. Proyecto global
 
 ### 3.1. Objetivo
@@ -265,6 +267,8 @@ Tres niveles:
 
 Al finalizar la asignatura, se entregará el link a los repositorios de cada grupo.
 
+> Fecha tope de entrega: **7 de enero de 2026**.
+
 ---
 
 ## 4. Proyecto asociado al enunciado común
@@ -287,6 +291,8 @@ Al finalizar la asignatura se entrega:
 
 - Una **memoria** con los dos apartados anteriores **claramente diferenciados**.
 - Un **enlace al repositorio público** con la **implementación funcional de dichos pipelines**.
+
+> Fecha tope de entrega: **7 de enero de 2026**.
 
 ---
 
@@ -350,5 +356,5 @@ gantt
     Festivo · sin sesión       :crit, milestone, m0, 2026-10-12, 0d
     S4 (19 oct)                :milestone, m4, 2026-10-19, 0d
     S5 (26 oct)                :milestone, m5, 2026-10-26, 0d
-    Entrega boletines 1ª parte :crit, milestone, meb, 2026-11-01, 0d
+    Entrega proyecto boletines 1ª parte (2 nov.) :crit, milestone, meb, 2026-11-02, 0d
 ```
