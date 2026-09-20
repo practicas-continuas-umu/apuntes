@@ -267,7 +267,7 @@ Tres niveles:
 
 Al finalizar la asignatura, se entregará el link a los repositorios de cada grupo.
 
-> Fecha tope de entrega: **7 de enero de 2026**.
+> Fecha tope de entrega (tentativa): **11 de enero de 2027**.
 
 ---
 
@@ -292,7 +292,7 @@ Al finalizar la asignatura se entrega:
 - Una **memoria** con los dos apartados anteriores **claramente diferenciados**.
 - Un **enlace al repositorio público** con la **implementación funcional de dichos pipelines**.
 
-> Fecha tope de entrega: **7 de enero de 2026**.
+> Fecha tope de entrega (tentativa): **11 de enero de 2027**.
 
 ---
 
