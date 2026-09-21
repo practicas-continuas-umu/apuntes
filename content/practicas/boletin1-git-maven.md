@@ -104,6 +104,8 @@ Pide a una IA que genere una **API REST con Spring Boot y Maven**, con persisten
 - Separación en capas (controlador / servicio / repositorio).
 - Manejo de errores centralizado: un recurso inexistente devuelve **404**, no una traza de excepción.
 - Al menos **5 tests que comprueben reglas de negocio reales** (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`.
+- No debe incluir tests de integración que levanten el contexto de la aplicación y/o una base de datos. Solo debe incluir tests unitarios.
+- El proyecto debe generar mediante mvn package un JAR ejecutable (fat JAR) que incluya todas las dependencias y pueda iniciarse mediante `java -jar target/<nombre>.jar`.
 
 > **CONSEJO**
 >
@@ -118,6 +120,7 @@ Pide a una IA que genere una **API REST con Spring Boot y Maven**, con persisten
 > * Manejo de errores centralizado: un recurso inexistente devuelve 404, no una traza de excepción.
 > * Al menos 5 tests que comprueben reglas de negocio reales (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`.
 > * No debe incluir tests de integración que levanten el contexto de la aplicación y/o una base de datos. Solo debe incluir tests unitarios.
+> * El proyecto debe generar mediante mvn package un JAR ejecutable (fat JAR) que incluya todas las dependencias y pueda iniciarse mediante `java -jar target/<nombre>.jar`.
 
 
 
@@ -133,7 +136,7 @@ mvn clean package
 - Arranca la aplicación y comprueba que escucha (registrando alguna instancia y recuperándola con `curl`):
 
 ```bash
-java -jar target/nombre-del-jar.jar
+java -jar target/nombre-del-jar-gordo.jar
 
 # En otra terminal:
 curl ... # prueba los endpoints de la API
