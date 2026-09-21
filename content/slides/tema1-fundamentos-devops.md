@@ -30,10 +30,11 @@ MISUM · Universidad de Murcia
 ## Motivación
 
 **El problema del pasado:**
-- Lanzamientos de software cada varios meses, grandes y arriesgados
+- Lanzamientos de software cada varios meses, grandes y arriesgados 
+- Corregir un bug detectado tarde costaba mucho más tiempo y dinero
 - Dev y Ops trabajaban aislados, problema de "en mi máquina funciona"
 - Un fallo en producción se convertía en "juego de culpas"
-- Corregir un bug detectado tarde costaba mucho más tiempo y dinero
+
 
 **Lo que las empresas necesitaban:**
 - Entregar valor al usuario más rápido y con menos riesgo

@@ -176,7 +176,7 @@ flowchart TB
 
 **Regla de reparto:** con *N* grupos hay **1 frontend y *N* − 1 microservicios**, cada uno en un lenguaje distinto. Por ejemplo: 5 grupos → frontend + 4 microservicios; 6 grupos → frontend + 5 microservicios.
 
-El repositorio del frontend es, además, el que **contiene la puesta en marcha de la aplicación completa** y, por tanto, depende en cierta medida de los demás.
+> El repositorio del frontend es, además, el que **contiene la puesta en marcha de la aplicación completa** y, por tanto, depende en cierta medida de los demás.
 
 ### 3.3. Responsabilidades de cada grupo
 
