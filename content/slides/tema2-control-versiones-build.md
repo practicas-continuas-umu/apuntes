@@ -358,8 +358,8 @@ git switch feature
 git rebase main
 ```
 
-- Para **mantener un historial lineal**, sin commits de fusión de por medio.
-- Muy útil para **actualizar una rama de feature** con los últimos cambios de `main` antes de abrir un PR.
+- Para **mantener un historial lineal**, sin commits de fusión de por medio
+- Muy útil para **actualizar una rama de feature** con los últimos cambios de `main` antes de abrir un PR
 
 **¿Y si hay conflictos?** El rebase reaplica los commits **uno a uno**; si alguno choca, se **detiene en ese commit**:
 
