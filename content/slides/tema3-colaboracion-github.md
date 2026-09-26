@@ -288,7 +288,6 @@ GitHub permite configurar reglas sobre `main` (*branch protection rules*):
 - Exigir que el PR **pase los checks de CI** antes de poder fusionarse.
 - Exigir **al menos una aprobación** de revisión antes de fusionar.
 - Prohibir el *push* directo a `main`: todo cambio pasa por PR.
-- Exigir que la rama esté **actualizada** con `main` antes de fusionar.
 
 Esto convierte las buenas prácticas en **reglas automáticas**, no solo en confianza.
 
