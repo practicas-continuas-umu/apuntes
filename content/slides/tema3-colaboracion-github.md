@@ -125,7 +125,7 @@ Es una plataforma diseñada para la colaboración entre desarrolladores, tanto e
 
 </center>
 
-Ejemplo real: `https://github.com/jgrapht/jgrapht/pull/811`
+Ejemplo real: https://github.com/jgrapht/jgrapht/pull/811
 
 ---
 
@@ -147,15 +147,75 @@ Ejemplo real: `https://github.com/jgrapht/jgrapht/pull/811`
 
 ---
 
+## GitHub Flow con *forks* (paso a paso)
+
+Cuando **no tienes permiso de escritura** en el repositorio original (`upstream`):
+
+1. **Hacer *fork*** del repositorio desde GitHub: se crea tu copia (`origin`) en tu cuenta.
+2. **Clonar tu fork** y añadir el original como remoto: `git remote add upstream <url-original>`.
+3. **Actualizar `main`** desde el original: `git switch main && git pull upstream main`.
+4. **Crear una rama** con un nombre descriptivo: `git switch -c feature/login-form`.
+5. **Trabajar y confirmar cambios**, y **subir la rama a tu fork**: `git push -u origin feature/login-form`.
+6. **Abrir un Pull Request desde tu fork** hacia `main` del repositorio original.
+7. **Revisión de código**: los *maintainers*/*code owners* comentan, piden cambios (los subes a la misma rama y el PR se actualiza) o **fusionan el PR**; después puedes borrar la rama.
+
+---
+
+## Mi rama se ha quedado desfasada: *rebase*
+
+Mientras trabajabas en `feature`, se han fusionado otros PRs en `main` (`X`, `Y`, `Z`). Con `git rebase` **reaplicas** tus commits sobre el `main` actual:
+
+<div class="columns">
+<div>
+
+**Antes**: `feature` parte de `B`
+
+```mermaid
+gitGraph
+    commit id: "A"
+    commit id: "B"
+    branch feature
+    commit id: "C"
+    commit id: "D"
+    checkout main
+    commit id: "X (PR 41)"
+    commit id: "Y (PR 42)"
+    commit id: "Z (PR 43)"
+```
+
+</div>
+<div>
+
+**Después**: `feature` parte de `Z`
+
+```mermaid
+gitGraph
+    commit id: "A"
+    commit id: "B"
+    commit id: "X (PR 41)"
+    commit id: "Y (PR 42)"
+    commit id: "Z (PR 43)"
+    branch feature
+    commit id: "C′"
+    commit id: "D′"
+```
+
+</div>
+</div>
+
+```bash
+git fetch origin
+git rebase origin/main        # feature pasa a partir de Z
+git push --force-with-lease   # la historia de feature ha cambiado
+```
+
+---
+
 ## ¿Por qué ramas cortas y frecuentes?
 
 - Cuanto más tiempo vive una rama sin fusionarse, **más diverge** de `main` → más riesgo de conflictos.
 - Ramas pequeñas y PRs enfocados en **un solo cambio** son más fáciles y rápidos de revisar.
 - Facilita la integración continua: cada PR dispara los checks de CI (Tema 5) sobre un cambio acotado.
-
-<br>
-
-> Regla práctica: si tu PR tiene más de ~400 líneas de diff, probablemente deberías dividirlo.
 
 ---
 
@@ -166,6 +226,58 @@ Ejemplo real: `https://github.com/jgrapht/jgrapht/pull/811`
 | **Merge commit** | Conserva todos los commits de la rama + crea un commit de fusión | Se quiere preservar el historial detallado |
 | **Squash and merge** | Aplasta todos los commits de la rama en **uno solo** sobre `main` | Historial de `main` limpio, un commit por funcionalidad |
 | **Rebase and merge** | Reaplica los commits de la rama sobre `main`, sin commit de fusión | Historial lineal, sin merges "de más" |
+
+---
+
+## Historial con *merge commit*
+
+La rama `feature` parte de `B` y aporta dos commits (`C` y `D`). Se **conservan** y se añade el commit de fusión `M`:
+
+```mermaid
+gitGraph
+    commit id: "A"
+    commit id: "B"
+    branch feature
+    commit id: "C"
+    commit id: "D"
+    checkout main
+    merge feature id: "M"
+```
+
+---
+
+## Historial con *squash and merge*
+
+`C` y `D` se **resumen** en un único commit `S` sobre `main`:
+
+```mermaid
+gitGraph
+    commit id: "A"
+    commit id: "B"
+    branch feature
+    commit id: "C"
+    commit id: "D"
+    checkout main
+    commit id: "S"
+```
+
+---
+
+## Historial con *rebase and merge*
+
+Los cambios de `C` y `D` se **reaplican** sobre `main` como commits nuevos `C′` y `D′`, sin commit de fusión. `main` queda lineal y los originales siguen en `feature`:
+
+```mermaid
+gitGraph
+    commit id: "A"
+    commit id: "B"
+    branch feature
+    commit id: "C"
+    commit id: "D"
+    checkout main
+    commit id: "C′"
+    commit id: "D′"
+```
 
 ---
 
@@ -213,9 +325,6 @@ Esto convierte las buenas prácticas en **reglas automáticas**, no solo en conf
 - Responder a cada comentario (aunque sea para decir "hecho" o justificar por qué no se aplica).
 - Volver a solicitar revisión tras aplicar los cambios (`Re-request review`).
 
-<br>
-
-> El *code review* es, junto con la CI, la principal red de seguridad antes de que un cambio llegue a `main`.
 
 ---
 
@@ -228,4 +337,4 @@ Esto convierte las buenas prácticas en **reglas automáticas**, no solo en conf
 GitHub añade colaboración (ramas, PRs, issues, forks) sobre Git.
 El flujo de *feature branches* + *code review* + CI es el estándar profesional.
 
-👉 **Práctica 2: GitHub**
+👉 Práctica 2: GitHub

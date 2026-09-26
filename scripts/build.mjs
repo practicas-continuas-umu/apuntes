@@ -117,6 +117,24 @@ function titleFromMarkdown(body, fallback) {
   return heading ? heading[1].trim() : fallback
 }
 
+// Marp deja los bloques ```mermaid como <pre><code class="language-mermaid">.
+// Los renderizamos en el navegador con mermaid.render(), que dibuja en un
+// contenedor temporal fuera de la diapositiva: así las medidas del texto no se
+// ven alteradas por el escalado (transform) con el que Marp ajusta cada slide.
+const SLIDES_MERMAID_SCRIPT = `<script src="../vendor/mermaid.min.js"></script>
+<script>
+mermaid.initialize({ startOnLoad: false })
+document.querySelectorAll('code.language-mermaid').forEach(function (code, i) {
+  mermaid.render('mermaid-slide-' + i, code.textContent).then(function (result) {
+    var figure = document.createElement('div')
+    figure.className = 'mermaid-diagram'
+    figure.innerHTML = result.svg
+    code.parentElement.replaceWith(figure)
+  })
+})
+</script>
+`
+
 async function buildSlides() {
   const files = (await fs.readdir(SLIDES_SRC)).filter((f) => f.endsWith('.md'))
   const outDir = path.join(SITE, 'slides')
@@ -154,8 +172,12 @@ async function buildSlides() {
 
     // Marp CLI no tiene una opción para fijar el favicon: lo inyectamos
     // después, a mano, en el <head> del HTML ya generado.
-    const generatedHtml = await fs.readFile(outPath, 'utf-8')
-    await fs.writeFile(outPath, generatedHtml.replace('<head>', `<head>${FAVICON_LINK}`), 'utf-8')
+    let generatedHtml = await fs.readFile(outPath, 'utf-8')
+    generatedHtml = generatedHtml.replace('<head>', `<head>${FAVICON_LINK}`)
+    if (generatedHtml.includes('language-mermaid')) {
+      generatedHtml = generatedHtml.replace('</body>', `${SLIDES_MERMAID_SCRIPT}</body>`)
+    }
+    await fs.writeFile(outPath, generatedHtml, 'utf-8')
 
     // Copia el .md original para el botón "Descargar MD" del visor.
     await fs.copyFile(srcPath, path.join(outDir, file))

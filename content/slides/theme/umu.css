@@ -121,3 +121,23 @@ section.divider h1 {
   border-bottom: none;
   font-size: 2em;
 }
+
+/* Diagramas Mermaid (gitGraph, etc.) renderizados en el navegador */
+.mermaid-diagram svg {
+  display: block;
+  margin: 0 auto;
+  height: 220px;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+/* Dos columnas (p. ej. diagramas "antes / después") */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.columns .mermaid-diagram svg {
+  height: auto;
+}
