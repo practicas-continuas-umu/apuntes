@@ -61,6 +61,7 @@ GitHub ofrece tres botones y cada uno produce un historial distinto (ninguno es 
 ### Parte A — Publicar el repositorio
 
 - Crea un repositorio **nuevo**, **público** y **vacío en GitHub** (sin README, para no generar conflictos).
+- El creador del repositorio debe dar de alta como colaborador a su pareja para que pueda hacer push.
 - Conecta tu repo local con el remoto y haz el primer push:
 
 ```bash
@@ -112,6 +113,8 @@ src/path2/**     @usuario2
 - Investiga cómo escoger la estrategia de fusión del PR por defecto y escoge la que consideres.
 
 - Genera un `CONTRIBUTING.md` con instrucciones para contribuir al proyecto (todo lo que necesite saber alguien que quiera contribuir: cómo contribuir, política de fusión, como poner en marcha el entorno de desarrollo, los hooks, etc.).
+
+- Haz push de todos estos cambios y comprueba que GitHub reconoce las plantillas y los propietarios de código.
 
 ### Parte C — Proteger la rama main
 
