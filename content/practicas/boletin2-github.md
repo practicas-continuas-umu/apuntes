@@ -6,13 +6,13 @@ title: "Boletín 2: GitHub y colaboración con Pull Requests"
 
 > **OBJETIVO**
 >
-> Llevar tu proyecto a GitHub y trabajar con el flujo profesional de colaboración: ramas de feature, Pull Requests, revisión de código real entre compañeros, plantillas, propietarios de código y protección de la rama principal.
+> Llevar tu proyecto a GitHub y trabajar con el flujo profesional de colaboración: ramas de feature, Pull Requests, revisión de código entre compañeros, plantillas, propietarios de código y protección de la rama principal.
 
 ## 1. Objetivos de la sesión
 
 - **Publicar el repositorio** en GitHub (**repositorio público**) y entender la relación local ↔ remoto.
 - **Dominar el flujo de Pull Requests** (GitHub Flow): rama → PR → revisión → merge.
-- **Revisar el código de otra persona**.
+- **Revisar el código** de otra persona.
 - **Usar Issues, plantillas y CODEOWNERS** para organizar el trabajo.
 - **Configurar branch protection** en `main` y elegir una política de merge.
 
@@ -100,12 +100,41 @@ Closes #
 # Toda la aplicación la revisa el equipo
 *               @tu_usuario @usuario_companero
 ```
+Aquí se podría afinar más. Por ejemplo, si el path `src/path1` es revisado por un propietario y el path `src/path2` por otro.
+
+```bash
+# src/path1 lo revisa @usuario1
+src/path1/**     @usuario1
+# src/path2 lo revisa @usuario2
+src/path2/**     @usuario2
+```
 
 - Investiga cómo escoger la estrategia de fusión del PR por defecto y escoge la que consideres.
 
-- Genera un `CONTRIBUTING.md` con instrucciones para contribuir al proyecto (cómo contribuir, política de fusión, etc.).
+- Genera un `CONTRIBUTING.md` con instrucciones para contribuir al proyecto (todo lo que necesite saber alguien que quiera contribuir: cómo contribuir, política de fusión, como poner en marcha el entorno de desarrollo, los hooks, etc.).
 
-### Parte C — Trabajo por Pull Requests
+### Parte C — Proteger la rama main
+
+En **Settings → Branches** (o Rules → Rulesets), añade una regla de protección para `main`:
+
+- Require a pull request before merging.
+- Require at least 1 approval.
+- Require review from Code Owners.
+- Require conversation resolution before merging.
+- Dismiss stale pull request approvals when new commits are pushed.
+- Do not allow bypassing the above settings, para que la regla también se aplique a quienes administran el repositorio.
+- No permitas force pushes ni eliminación de main.
+
+Explica qué estamos consiguiendo con estas reglas y prueba que funcionan intentando hacer un push directo a `main`:
+
+```bash
+git switch main
+echo "prueba" >> README.md
+git commit -am "chore: intento de push directo"
+git push          # debe ser RECHAZADO por el servidor
+```
+
+### Parte D — Trabajo por Pull Requests
 
 Realiza al menos **DOS** ciclos completos de PR, cada uno aportando una mejora real a la API (un endpoint nuevo, una validación, un filtro de búsqueda, paginación...). Un integrante de la pareja abre el PR y el otro lo revisa. Luego cambian los roles.
 
@@ -120,34 +149,12 @@ Realiza al menos **DOS** ciclos completos de PR, cada uno aportando una mejora r
 - Fusiona el PR con la estrategia que hayas elegido y borra la rama.
 
 
-### Parte D — Provocar un conflicto en un PR
+### Parte E — Provocar un conflicto en un PR
 
 - Crea dos ramas que modifiquen la misma zona de código (la misma línea).
 - Fusiona la primera vía PR.
 - Abre un PR con la segunda rama y observa que hay conflicto.
 - Haz en local un rebase de la segunda rama sobre `main` y resuelve el conflicto (puede requerir `git push --force-with-lease`). Haz push y observa como GitHub ha actualizado el PR automáticamente y ya no hay conflicto.
-
-### Parte E — Proteger la rama main
-
-En **Settings → Branches** (o Rules → Rulesets), añade una regla de protección para `main`:
-
-- Require a pull request before merging.
-- Require at least 1 approval.
-- Require conversation resolution before merging.
-- Dismiss stale pull request approvals when new commits are pushed.
-- Do not allow bypassing the above settings, para que la regla también se aplique a quienes administran el repositorio.
-- No permitas force pushes ni eliminación de main.
-
-```bash
-git switch main
-echo "prueba" >> README.md
-git commit -am "chore: intento de push directo"
-git push          # debe ser RECHAZADO por el servidor
-```
-
-> **CONSEJO**
->
-> Deja activada esta protección: en el [Boletín 4](boletin4-ci-github-actions.html) le añadirás los **required status checks** para que un PR con tests rojos tampoco se pueda fusionar.
 
 ### Parte F — PR con fork
 
