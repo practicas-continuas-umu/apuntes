@@ -209,6 +209,219 @@ Tras editar y resolver: `git add <archivo>` y `git commit -m "fusionado"`.
 
 ---
 
+## Caso 1: *fast-forward*
+
+`main` no tiene commits nuevos desde que se creó `feature`: Git simplemente **mueve el puntero**, sin crear un commit de *merge*.
+
+<div style="display: flex; gap: 24px;">
+
+<div style="flex: 1;">
+
+**Antes**
+
+```mermaid
+gitGraph
+   commit id: "A"
+   commit id: "B"
+   branch feature
+   checkout feature
+   commit id: "C"
+   commit id: "D"
+```
+
+</div>
+
+<div style="flex: 1;">
+
+**Después** de `git merge feature`
+
+```mermaid
+gitGraph
+   commit id: "A"
+   commit id: "B"
+   commit id: "C"
+   commit id: "D"
+```
+
+`main` y `feature` quedan apuntando al mismo commit `D`.
+
+</div>
+
+</div>
+
+---
+
+## Caso 2: *merge* sin conflicto
+
+`main` ha avanzado, pero nadie ha tocado las mismas líneas: Git combina ambas historias en un **nuevo commit de fusión** (dos padres).
+
+<div style="display: flex; gap: 24px;">
+
+<div style="flex: 1;">
+
+**Antes**
+
+```mermaid
+gitGraph
+   commit id: "A"
+   commit id: "B"
+   branch feature
+   checkout feature
+   commit id: "C"
+   commit id: "D"
+   checkout main
+   commit id: "E"
+   commit id: "F"
+```
+
+</div>
+
+<div style="flex: 1;">
+
+**Después** de `git merge feature`
+
+```mermaid
+gitGraph
+   commit id: "A"
+   commit id: "B"
+   branch feature
+   checkout feature
+   commit id: "C"
+   commit id: "D"
+   checkout main
+   commit id: "E"
+   commit id: "F"
+   merge feature id: "M"
+```
+
+</div>
+
+</div>
+
+---
+
+## Caso 3: *merge* con conflicto
+
+Mismo punto de partida que el caso anterior, pero `main` y `feature` han tocado las **mismas líneas**: el *merge* se interrumpe y no se crea ningún commit todavía.
+
+<div style="display: flex; gap: 24px;">
+
+<div style="flex: 1;">
+
+**Antes** (interrumpido, sin commit)
+
+```mermaid
+gitGraph
+   commit id: "A"
+   commit id: "B"
+   branch feature
+   checkout feature
+   commit id: "C"
+   commit id: "D"
+   checkout main
+   commit id: "E"
+   commit id: "F"
+```
+
+</div>
+
+<div style="flex: 1;">
+
+**Tras** resolver y confirmar
+
+```mermaid
+gitGraph
+   commit id: "A"
+   commit id: "B"
+   branch feature
+   checkout feature
+   commit id: "C"
+   commit id: "D"
+   checkout main
+   commit id: "E"
+   commit id: "F"
+   merge feature id: "M (manual)"
+```
+
+</div>
+
+</div>
+
+---
+
+## `git rebase`: ¿cuándo se usa?
+
+`git rebase` reescribe el historial: toma los commits de tu rama y los **reaplica** encima de otro punto (normalmente el `main` actualizado), en vez de crear un commit de fusión.
+
+```bash
+git switch feature
+git rebase main
+```
+
+- Para **mantener un historial lineal**, sin commits de fusión de por medio
+- Muy útil para **actualizar una rama de feature** con los últimos cambios de `main` antes de abrir un PR
+
+**¿Y si hay conflictos?** El rebase reaplica los commits **uno a uno**; si alguno choca, se **detiene en ese commit**:
+
+```bash
+# resolver el archivo en conflicto, luego:
+git add <archivo>
+git rebase --continue   # o --skip / --abort
+```
+
+---
+
+## `git rebase`: diagrama
+
+Mismo punto de partida que los casos de *merge*: `main` avanzó con `E` y `F` mientras `feature` tenía `C` y `D`.
+
+<div style="display: flex; gap: 24px;">
+
+<div style="flex: 1;">
+
+**Antes**
+
+```mermaid
+gitGraph
+   commit id: "A"
+   commit id: "B"
+   branch feature
+   checkout feature
+   commit id: "C"
+   commit id: "D"
+   checkout main
+   commit id: "E"
+   commit id: "F"
+```
+
+</div>
+
+<div style="flex: 1;">
+
+**Después** de `git rebase main`
+
+```mermaid
+gitGraph
+   commit id: "A"
+   commit id: "B"
+   commit id: "E"
+   commit id: "F"
+   branch feature
+   checkout feature
+   commit id: "C'"
+   commit id: "D'"
+```
+
+`C'` y `D'` son commits **nuevos** (mismo contenido, distinto hash) reaplicados sobre `F`.
+
+</div>
+
+</div>
+
+Ahora un `git merge feature` desde `main` sería *fast-forward* (caso 1).
+
+---
+
 ## Interacción con el repositorio remoto
 
 - `git push origin <rama>`: envía los commits locales al remoto.
@@ -352,4 +565,4 @@ Maven nos da una construcción reproducible del artefacto.
 
 Ambos son la base sobre la que se construyen los *pipelines* CI/CD (Tema 5).
 
-👉 **Práctica 1: Git y Maven**
+👉 Práctica 1: Git y Maven

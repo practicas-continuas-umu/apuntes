@@ -19,124 +19,50 @@ MISUM · Universidad de Murcia
 
 ## Índice
 
-1. Motivación: del modelo en cascada a DevOps
-2. ¿Qué es DevOps?
-3. Fases de un ciclo DevOps
-4. Prácticas continuas: CI, CD e IaC (panorama general)
-5. DevOps extendido y DevSecOps
+1. Motivación y concepto de DevOps
+2. Fases de DevOps y el símbolo del infinito
+3. Automatización: prácticas continuas e infraestructura como código
+4. DevOps extendido y DevSecOps
 
 ---
 
-<!-- _class: divider -->
 
-# 1. Motivación
+## Motivación
 
----
-
-## El modelo en cascada
-
-El **modelo en cascada** tradicional organiza el desarrollo software como un *pipeline* rígido y lineal:
-
-<center>
-
-**requisitos → diseño → desarrollo → testing → despliegue → mantenimiento**
+**El problema del pasado:**
+- Lanzamientos de software cada varios meses, grandes y arriesgados 
+- Corregir un bug detectado tarde costaba mucho más tiempo y dinero
+- Dev y Ops trabajaban aislados, problema de "en mi máquina funciona"
+- Un fallo en producción se convertía en "juego de culpas"
 
 
+**Lo que las empresas necesitaban:**
+- Entregar valor al usuario más rápido y con menos riesgo
+- Detectar errores antes de que lleguen a producción
+- Equipos que colaboren en vez de culparse
 
-![w:420](assets/tema1/waterfall.png)
-</center>
-
-Cada fase termina por completo antes de empezar la siguiente.
+> DevOps nace como respuesta a estos problemas.
 
 ---
 
-## Problemas del modelo en cascada
+## ¿Qué es DevOps?
 
-- **Cambios costosos** una vez se avanza de fase: volver atrás implica rehacer trabajo ya dado por cerrado.
-- **El feedback llega tarde**: el cliente solo ve el producto completo al final, en la fase de despliegue.
-- Cualquier error de requisitos o diseño se detecta cuando ya es caro corregirlo.
+> Unión de **Desarrollo (Dev)** y **Operaciones (Ops)** en un solo flujo de trabajo continuo.
 
----
+**Antes:** Dev escribía código → lo "lanzaba por encima del muro" → Ops lo desplegaba
+**Resultado:** culpas cruzadas, entregas lentas, poca comunicación
 
-## Ejemplo: app de citas médicas (I)
-
-Desarrollo con modelo cascada:
-
-- **Requisitos (enero)**: documento de 50 páginas, se da por cerrado.
-- **Diseño (febrero-marzo)**: se diseña toda la arquitectura (pantallas + BD + APIs).
-- **Desarrollo (abril-julio)**: 4 meses de implementación sin mostrar nada al cliente.
+**Pilares de DevOps:**
+- Colaboración y responsabilidad compartida
+- Automatización
+- Medición y monitoreo constante
+- Iteración rápida (cambios pequeños y frecuentes)
 
 ---
 
-## Ejemplo: app de citas médicas (II)
+## Las fases DevOps y el símbolo del infinito
 
-- **Pruebas (agosto)**: los testers descubren que...
-  - las pantallas son demasiado complejas para usuarios mayores → **volver a requisitos**
-  - la concurrencia de citas cuelga el sistema → **volver a diseño**
-- **Despliegue (septiembre... o más tarde)**: el cliente no acepta la entrega.
-  - Reabrir requisitos y rediseñar → **retraso mínimo de 3-4 meses**, con un coste altísimo porque ya está todo construido.
-
----
-
-## Modelos iterativos / en espiral
-
-Usan fases similares, pero la aplicación se construye en **iteraciones** que añaden funcionalidad poco a poco:
-
-<center>
-
-**diseño → desarrollo → testing → demo al cliente** (y vuelta a empezar)
-
-
-
-![w:420](assets/tema1/iterations-.jpg)
-</center>
-
----
-
-## Problemas del modelo iterativo
-
-Normalmente hay dos equipos: **desarrollo** (diseño, código, testing) y **operaciones** (despliegue, monitorización).
-
-- **El despliegue es manual y doloroso**: copiar artefactos, ejecutar scripts, configurar servidores a mano.
-- **Operaciones recibe "grandes paquetes de cambios" infrecuentemente** → cada despliegue es más arriesgado y laborioso.
-- **Los entornos de pruebas no coinciden con producción**: se crean y mantienen a mano, desincronizados → "funciona en pruebas pero no en producción".
-
----
-
-## El problema de fondo
-
-> **Escasa automatización y limitada comunicación y coordinación entre los equipos de desarrollo y operaciones.**
-
-Esta es exactamente la brecha que DevOps busca cerrar.
-
----
-
-<!-- _class: divider -->
-
-# 2. ¿Qué es DevOps?
-
----
-
-## Definición
-
-DevOps nace de las prácticas iterativas, por la necesidad de mayor sinergia entre desarrollo y operaciones.
-
-> **DevOps** es un esfuerzo colaborativo y multidisciplinario dentro de una organización para **automatizar** la entrega continua de nuevas versiones de software, garantizando su corrección y confiabilidad.
-
----
-
-## Aspectos clave de DevOps
-
-- **Cultura de la colaboración**
-  - Mentalidad que fomenta la colaboración, la responsabilidad compartida y la mejora continua entre desarrollo y operaciones.
-- **Automatización**
-  - Automatización de cada fase del ciclo de vida.
-  - Integración Continua y Entrega/Despliegue Continuo (**CI/CD**).
-  - Infraestructura como código (**IaC**).
-
----
-
-## Fases de un ciclo DevOps
+> Representa que DevOps no es lineal: es un ciclo de mejora continua. Se divide en dos mitades: Dev y Ops.
 
 <center>
 
@@ -144,30 +70,42 @@ DevOps nace de las prácticas iterativas, por la necesidad de mayor sinergia ent
 
 </center>
 
-**Plan → Code → Build → Test → Release → Deploy → Operate → Monitor** → (vuelta a Plan)
 
 ---
 
-## Detalle de las fases (I)
+## Detalle de las fases
 
-- **Plan**: se definen requisitos, funcionalidades y prioridades del producto.
-- **Code**: los desarrolladores implementan el código usando repositorios colaborativos (Git, etc.).
-- **Build**: el código se compila, se generan artefactos y se realiza integración continua.
-- **Test**: se ejecutan pruebas automáticas (unitarias, de integración, etc.).
+<div style="display: flex; gap: 40px;">
+
+<div style="flex: 1;">
+
+### 🛠️ Dev
+**Plan → Code → Build → Test**
+
+- **Plan**: definir qué se construye
+- **Code**: escribir el código
+- **Build**: compilar/empaquetar 
+- **Test**: pruebas automáticas
+
+</div>
+
+<div style="flex: 1;">
+
+### 🚀 Ops
+**Release → Deploy → Operate → Monitor**
+
+- **Release**: preparar la versión 
+- **Deploy**: desplegar a producción 
+- **Operate**: mantener el sistema funcionando
+- **Monitor**: observar métricas, logs, errores
+
+</div>
+
+</div>
 
 ---
 
-## Detalle de las fases (II)
-
-- **Release**: se prepara el artefacto probado para su despliegue (pasando por *staging* si procede).
-- **Deploy**: se automatiza el paso a producción mediante *pipelines* CI/CD e infraestructura como código.
-- **Operate**: el sistema se mantiene en ejecución: disponibilidad, rendimiento, seguridad.
-- **Monitor**: se recogen métricas, logs y feedback para detectar fallos y oportunidades de mejora.
-- **Loop continuo**: los datos de monitorización retroalimentan la planificación, cerrando el ciclo.
-
----
-
-## Automatización de las fases
+## Herramientas
 
 Existen multitud de herramientas que dan soporte a cada fase del ciclo DevOps:
 
@@ -181,21 +119,26 @@ A lo largo de la asignatura usaremos: **Git, Maven, GitHub, Docker, GitHub Actio
 
 ---
 
-<!-- _class: divider -->
+## Automatización
 
-# 3. Prácticas continuas: panorama general
+> Uno de los pilares de DevOps es la **automatización**.
 
+Formas principales de automatizar:
+- Prácticas continuas (CI/CD)
+- Infraestructura como código (IaC)
 ---
 
-## Integración, Entrega y Despliegue Continuos
+## Prácticas continuas (CI/CD)
+
+- Se implementan mediante **pipelines** que automatizan la compilación, pruebas y despliegue de software
 
 | Práctica | ¿Qué automatiza? | ¿Llega a producción? |
 |---|---|---|
-| **Integración continua (CI)** | Compilación + tests al hacer commit | ❌ No |
-| **Entrega continua (CD)** | CI + empaquetado (+ despliegue a *staging*) | Lista para producción (manual) |
+| **Integración continua (CI)** | Compilación + tests  | ❌ No |
+| **Entrega continua (CD)** | CI + empaquetado  | Lista para producción (manual) |
 | **Despliegue continuo** | Entrega continua + despliegue automático | ✅ Automáticamente |
 
-Se estudiarán en detalle en el **Tema 5**, con GitHub Actions como herramienta principal.
+- Las pipelines se estudiarán en detalle en el **Tema 5** con GH Actions
 
 ---
 
@@ -206,29 +149,14 @@ Se estudiarán en detalle en el **Tema 5**, con GitHub Actions como herramienta 
 - Se escriben scripts o archivos declarativos (Terraform, Ansible, CloudFormation...) que describen la infraestructura deseada.
 - Esos archivos se **versionan como cualquier código**: reproducibilidad, control de cambios, colaboración.
 
-Se estudiará en detalle en el **Tema 6**, con Ansible como herramienta principal.
+Se estudiará en detalle en el **Tema 6**, con Ansible como herramienta principal. En la segunda parte de la asignatura también veréis otras tecnologías.
 
 ---
 
-## Cómo DevOps resuelve los problemas tradicionales
 
-| Problema tradicional | ¿Cómo lo resuelve DevOps? |
-|---|---|
-| Despliegue manual y doloroso | Pipelines CI/CD repetibles; pasar a producción es automático o "un clic" |
-| Operaciones recibe grandes paquetes de cambios | Despliegues frecuentes y pequeños → bajo riesgo por entrega |
-| Entornos de pruebas ≠ producción | IaC genera entornos consistentes desde la misma definición |
+## DevOps extendido: ampliando el pipeline
 
----
-
-<!-- _class: divider -->
-
-# 4. DevOps extendido
-
----
-
-## Ampliando el pipeline
-
-Se trata de ampliar las fases habituales de un *pipeline* DevOps, enriqueciendo las existentes o añadiendo nuevas etapas.
+> DevOps extendido: se trata de ampliar las fases habituales de un *pipeline* DevOps, enriqueciendo las existentes o añadiendo nuevas etapas.
 
 Ejemplos:
 
@@ -257,8 +185,8 @@ Ejemplos:
 
 # ¿Y ahora qué?
 
-- **Tema 2**: control de versiones y build tools 
-- **Tema 3**: colaboración en GitHub
-- **Tema 4**: contenedorización
-- **Tema 5**: CI/CD
-- **Tema 6**: IaC con Ansible
+- Tema 2: control de versiones y build tools 
+- Tema 3: colaboración en GitHub
+- Tema 4: contenedorización
+- Tema 5: CI/CD
+- Tema 6: IaC con Ansible

@@ -37,7 +37,7 @@ Maven es a la vez un **gestor de dependencias** (descarga las librerías que tu 
 | mvn compile | Compila el código fuente. |
 | mvn test | Compila y ejecuta los tests unitarios. |
 | mvn package | Empaqueta el resultado en un JAR (incluye compile + test). |
-| mvn verify | Ejecuta también los tests de integración y las comprobaciones de calidad. |
+| mvn verify | Ejecuta también los tests de integración y las comprobaciones de calidad (compile + test + package + integration tests) |
 | mvn clean | Borra lo construido previamente (carpeta target/). |
 
 > **CONSEJO**
@@ -104,16 +104,24 @@ Pide a una IA que genere una **API REST con Spring Boot y Maven**, con persisten
 - Separación en capas (controlador / servicio / repositorio).
 - Manejo de errores centralizado: un recurso inexistente devuelve **404**, no una traza de excepción.
 - Al menos **5 tests que comprueben reglas de negocio reales** (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`.
+- No debe incluir tests de integración que levanten el contexto de la aplicación y/o una base de datos. Solo debe incluir tests unitarios.
+- El proyecto debe generar mediante mvn package un JAR ejecutable (fat JAR) que incluya todas las dependencias y pueda iniciarse mediante `java -jar target/<nombre>.jar`.
 
 > **CONSEJO**
 >
-> Prompt de ejemplo: Genera un proyecto Maven con Spring Boot 3 y Java 21: una API REST de gestión de tareas (entidad Task con id, título, descripción, estado, prioridad y fecha límite). Incluye endpoints CRUD, capa de servicio, validaciones con Bean Validation, manejo de errores con @RestControllerAdvice y tests unitarios con JUnit 5. Usa H2 en memoria por ahora.
+> Prompt de ejemplo: Genera un proyecto Maven con Spring Boot 3 y Java 21: una API REST de gestión de tareas (entidad `Task` con id, título, descripción, estado, prioridad y fecha límite). Usa Spring Data JPA con Hibernate para la persistencia y H2 en memoria como base de datos. Incluye endpoints CRUD, capa de servicio, repositorio JPA, validaciones con Bean Validation, manejo de errores con `@RestControllerAdvice` y tests unitarios con JUnit 5.
+>
 > **Requisitos mínimos** de la aplicación para considerarse "no trivial":
->- Al menos una entidad de dominio con varios campos y validaciones.
->- Operaciones CRUD completas (crear, leer, actualizar, borrar).
->- Separación en capas (controlador / servicio / repositorio).
->- Manejo de errores centralizado: un recurso inexistente devuelve **404**, no una traza de excepción.
->- Al menos **5 tests que comprueben reglas de negocio reales** (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`
+>
+> * Al menos una entidad de dominio con varios campos y validaciones.
+> * Persistencia mediante Spring Data JPA/Hibernate.
+> * Operaciones CRUD completas (crear, leer, actualizar, borrar).
+> * Separación en capas (controlador / servicio / repositorio).
+> * Manejo de errores centralizado: un recurso inexistente devuelve 404, no una traza de excepción.
+> * Al menos 5 tests que comprueben reglas de negocio reales (p. ej. "no se puede crear una tarea con fecha límite pasada"), no simples `assertNotNull`.
+> * No debe incluir tests de integración que levanten el contexto de la aplicación y/o una base de datos. Solo debe incluir tests unitarios.
+> * El proyecto debe generar mediante mvn package un JAR ejecutable (fat JAR) que incluya todas las dependencias y pueda iniciarse mediante `java -jar target/<nombre>.jar`.
+
 
 
 ### Parte C — Construir y probar en local
@@ -128,7 +136,7 @@ mvn clean package
 - Arranca la aplicación y comprueba que escucha (registrando alguna instancia y recuperándola con `curl`):
 
 ```bash
-java -jar target/nombre-del-jar.jar
+java -jar target/nombre-del-jar-gordo.jar
 
 # En otra terminal:
 curl ... # prueba los endpoints de la API

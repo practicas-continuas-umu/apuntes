@@ -1,12 +1,12 @@
 ---
-title: "Boletín 0: Guía de la primera parte de la asignatura"
+title: "Boletín 0: Guía de la asignatura"
 ---
 
-# Boletín 0 · Guía de la primera parte de la asignatura
+# Boletín 0 · Guía de la asignatura
 
 > **Objetivo de este documento**
 >
-> Explicar **cómo se evalúa** la primera parte de la asignatura y **qué hay que entregar** en cada uno de sus tres bloques de trabajo: los *boletines en parejas*, el *proyecto global* y el *proyecto asociado al enunciado común*.
+> Explicar **cómo se evalúa** la asignatura (especialmente, la primera parte) y **qué hay que entregar** en cada uno de sus tres bloques de trabajo: los *boletines en parejas*, el *proyecto global* y el *proyecto asociado al enunciado común*.
 
 ---
 
@@ -45,24 +45,31 @@ El grueso de la nota (SE2) se reparte entre los tres bloques de trabajo que desc
 ```mermaid
 flowchart TD
     SE2["SE2 · Informes, trabajos y proyectos (80 %)"]
-    SE2 --> A["<b>Boletines en parejas</b><br/>7 sesiones · 1 repositorio<br/>API REST Java + CI/CD + Ansible"]
-    SE2 --> B["<b>Proyecto global</b><br/>Toda la clase · 1 repo por grupo<br/>Microservicios + frontend"]
-    SE2 --> C["<b>Enunciado común</b><br/>Grupos de trabajo<br/>Pipeline de CI + pipeline de despliegue"]
+    SE2 --> A["<b>Boletines en parejas (4 puntos)</b><br/>12 boletines"]
+    SE2 --> B["<b>Proyecto global (2 puntos)</b><br/>Toda la clase · 1 repo por grupo<br/>Microservicios + frontend"]
+    SE2 --> C["<b>Enunciado común (2 puntos)</b><br/>Grupos de trabajo<br/>Pipeline de CI + pipeline de despliegue"]
 ```
 
 ---
 
-## 2. Boletines en parejas
+## 2. Boletines
+
+Modalidades:
+- **Primera sesión, primera parte de la asignatura**: boletín individual.
+- **Segunda sesión en adelante, primera parte de la asignatura**: boletines en parejas.
+- **Segunda parte de la asignatura**: boletines en grupos (mismos grupos que el proyecto común).
+
+El resto de la sección se centra en los **boletines de la primera parte de la asignatura**.
 
 ### 2.1. Qué se construye
 
-A lo largo de **siete sesiones** se construye, de forma **incremental**, una **API REST en Java (Spring Boot)**: gestionada con Maven, contenerizada con Docker, validada por un pipeline de CI/CD en GitHub Actions y desplegada automáticamente con Ansible.
+A lo largo de **seis sesiones** se construye, de forma **incremental**, una **API REST en Java (Spring Boot)**: gestionada con Maven, contenerizada con Docker, validada por un pipeline de CI/CD en GitHub Actions y desplegada automáticamente con Ansible.
 
 Cada boletín parte del resultado del anterior; no son ejercicios independientes.
 
 ```mermaid
 flowchart LR
-    B1["1<br/>Git + Maven"] --> B2["2<br/>GitHub + PRs"] --> B3["3<br/>Docker"] --> B4["4<br/>CI"] --> B5["5<br/>CD"] --> B6["6<br/>Pipeline robusto"] --> B7["7<br/>Ansible"]
+    B1["1<br/>Git + Maven"] --> B2["2<br/>GitHub + PRs"] --> B3["3<br/>Docker"] --> B4["4<br/>CI"] --> B5["5<br/>CD"] --> B6["6<br/>Ansible"]
 ```
 
 ### 2.2. Boletines
@@ -74,26 +81,21 @@ flowchart LR
 | [3](boletin3-docker.html) | Docker: contenerizar la aplicación |
 | [4](boletin4-ci-github-actions.html) | Integración Continua con GitHub Actions |
 | [5](boletin5-cd-github-actions.html) | Entrega Continua: construir, versionar y publicar la imagen |
-| [6](boletin6-pipeline-robusto.html) | Pipeline robusto: calidad, seguridad y cadena de suministro |
-| [7](boletin7-ansible.html) | Despliegue con Ansible |
+| [6](boletin6-ansible.html) | Despliegue con Ansible |
 
 ### 2.3. Entrega
 
-La entrega de esta parte es **un único repositorio de GitHub** que crece sesión a sesión. Debe contener una carpeta `docs/` con **un archivo Markdown por sesión**, llamado `boletinX.md` (donde `X` es el número de sesión):
+La entrega de esta parte es **un único repositorio de GitHub** que crece sesión a sesión.
 
 ```text
 mi-repositorio/
-├── docs/
-│   ├── boletin1.md
-│   ├── boletin2.md
-│   └── ...
 ├── src/
 ├── pom.xml
 ├── Dockerfile
 └── .github/workflows/
 ```
 
-Cada `boletinX.md` debe incluir:
+ Paralelamente (y fuera del repositorio), cada sesión deberéis escribir en markdown una memoria de lo hecho (`boletinX.md` X = 1 ... 6). Cada `boletinX.md` debe incluir:
 
 1. **Una tabla resumen de los commits** de esa sesión: mensaje, descripción breve de lo hecho, autor y enlace al commit en GitHub.
 2. **Una explicación por commit**: qué se hizo y su relación con el boletín. Si se ha usado IA, indicar la herramienta y qué se le pidió.
@@ -119,14 +121,30 @@ Cada `boletinX.md` debe incluir:
 - **Relación con el boletín:** apartado X ...
 - **Uso de IA:** herramienta y prompt utilizado (o "no se ha usado").
 
-## Evidencias adicionales
+## Descripción narrativa de lo hecho en la sesión y relación con los commits
 
-<!-- Capturas de pantalla de lo que no queda reflejado en commits -->
+### Parte A
+
+...
+
+### Parte B
+
+...
+
+<!-- Incluir capturas de pantalla de lo que no queda reflejado en commits -->
 ```
 
 </details>
 
 ---
+
+Os recomiendo ir generando los `.md` en un **repositorio independiente** (o en una carpeta drive). Al final de la asignatura, incorporaréis los boletines a una carpeta `docs/` dentro del repositorio de la API REST para generar una GitHub Page.
+
+Los `.md` se entregarán semanalmente a través del aula virtual. **Se evaluará al final, pero esto cuenta para la nota de seguimiento (SE1).**
+
+Al finalizar la primera parte de la asignatura, se entregará el **link al repositorio de GitHub** y el link al **GitHub Page** generada a partir de los boletines.
+
+> Fecha tope de entrega: **2 de noviembre de 2026**.
 
 ## 3. Proyecto global
 
@@ -158,7 +176,7 @@ flowchart TB
 
 **Regla de reparto:** con *N* grupos hay **1 frontend y *N* − 1 microservicios**, cada uno en un lenguaje distinto. Por ejemplo: 5 grupos → frontend + 4 microservicios; 6 grupos → frontend + 5 microservicios.
 
-El repositorio del frontend es, además, el que **contiene la puesta en marcha de la aplicación completa** y, por tanto, depende en cierta medida de los demás.
+> El repositorio del frontend es, además, el que **contiene la puesta en marcha de la aplicación completa** y, por tanto, depende en cierta medida de los demás.
 
 ### 3.3. Responsabilidades de cada grupo
 
@@ -166,7 +184,7 @@ Cada grupo es responsable de **preparar toda la infraestructura y el repositorio
 
 | # | Grupo de una REST API | Grupo del frontend |
 |---|---|---|
-| 1 | REST API funcional en su lenguaje, con **un único algoritmo** implementado | Frontend funcional con **mocks** que imiten a los microservicios |
+| 1 | REST API funcional en su lenguaje, con **un único algoritmo (MergeSort)** implementado | Frontend funcional con **mocks** que imiten a los microservicios |
 | 2 | Pipeline de **CI/CD**: testear, construir, versionar y publicar la imagen | Pipeline de **CI** con tests unitarios y, cuando existan los microservicios, tests de integración de la app completa |
 | 3 | Conjunto de **issues** para que los resuelvan miembros de otros equipos (p. ej. un issue por algoritmo pendiente) | Conjunto de **issues** para otros equipos (aspectos estilísticos, funcionalidad adicional como gráficas, etc.) |
 | 4 | `README.md` con instrucciones de uso y despliegue | `README.md` con instrucciones de uso y despliegue |
@@ -182,7 +200,7 @@ Todas las REST APIs deben seguir **el mismo contrato de entrada y salida** para 
 // POST /api/v1/benchmark
 // Petición
 {
-  "algorithm": "mergesort",   // mergesort | quicksort | fibonacci | matmul
+  "algorithm": "mergesort",   // mergesort | quicksort | fibonacci | matmul | ...
   "size": 10000
 }
 ```
@@ -206,6 +224,8 @@ En **todos** los casos se realizan **5 mediciones** y se toma la **mediana**.
 |---|---|
 | **MergeSort** | Las entradas se generan aleatoriamente |
 | **QuickSort** | Las entradas se generan aleatoriamente |
+| **InsertionSort** | Las entradas se generan aleatoriamente |
+| **SelectionSort** | Las entradas se generan aleatoriamente |
 | **Fibonacci** | Implementación con programación dinámica |
 | **Multiplicación de matrices** | — |
 
@@ -233,8 +253,21 @@ flowchart LR
 
 Para aprobar esta parte, **cada estudiante** debe:
 
-- [ ] Realizar una **contribución no trivial** (que implique escribir código, no vale editar el `README`) **a cada microservicio que no sea el suyo**.
-- [ ] Realizar una **revisión de código** de al menos un pull request **de su propio repositorio**.
+- Realizar una **contribución no trivial** (que implique escribir código, no vale editar el `README`) **a un microservicio que no sea el suyo**.
+- Realizar una **revisión de código** de al menos un pull request **de su propio repositorio**.
+
+### 3.8. Evaluación
+
+Tres niveles:
+- **Individual** (50%): contribuciones y revisiones de cada estudiante.
+- **Grupo** (30%): calidad del microservicio o frontend entregado.
+- **Global** (20%): integración de todos los microservicios y frontend, y que la aplicación completa funcione correctamente.
+
+### 3.9. Entrega
+
+Al finalizar la asignatura, se entregará el link a los repositorios de cada grupo.
+
+> Fecha tope de entrega (tentativa): **11 de enero de 2027**.
 
 ---
 
@@ -246,16 +279,20 @@ Los grupos de trabajo deben abordar **dos pipelines** relacionados con el MVP de
 
 Reflexionar sobre cómo aplicar al proyecto común las tecnologías de Prácticas Continuas vistas en la asignatura. Hay que **seleccionar herramientas concretas** e **instanciarlas** para automatizar parte del desarrollo de la aplicación.
 
-### 4.2. Pipeline de despliegue (diseño)
+### 4.2. Pipeline de despliegue
 
 Reflexionar sobre cómo aplicar al proyecto común las tecnologías de Cloud vistas en la asignatura. Hay que **justificar qué tecnologías se van a utilizar y cuáles no**, y explicar cómo se integrarían en un pipeline.
+
+Esta parte la corrige el otro profesor de la asignatura y *no forma parte de la primera parte de la asignatura*.
 
 ### 4.3. Entrega
 
 Al finalizar la asignatura se entrega:
 
 - Una **memoria** con los dos apartados anteriores **claramente diferenciados**.
-- Un **enlace al repositorio público** con la implementación de dichos pipelines.
+- Un **enlace al repositorio público** con la **implementación funcional de dichos pipelines**.
+
+> Fecha tope de entrega (tentativa): **11 de enero de 2027**.
 
 ---
 
@@ -263,7 +300,7 @@ Al finalizar la asignatura se entrega:
 
 | Bloque | Modalidad | Entregable |
 |---|---|---|
-| Boletines | Parejas | Un repositorio de GitHub con `docs/boletin1.md` … `docs/boletin7.md` |
+| Boletines | Parejas | Un repositorio de GitHub con `docs/boletin1.md` … `docs/boletin6.md` |
 | Proyecto global | Grupo (repo) + individual (contribuciones) | Repositorio del microservicio o frontend + contribuciones y revisiones de cada estudiante |
 | Enunciado común | Grupo | Memoria (CI + despliegue) y repositorio público con los pipelines |
 
@@ -275,8 +312,13 @@ El uso de asistentes de IA (ChatGPT, Claude, Copilot, Gemini…) está **permiti
 
 1. **Revisar siempre** lo generado antes de incorporarlo.
 2. **Declarar el uso** en los boletines: qué herramienta se ha usado y qué se le ha pedido.
+3. **Entender lo generado**: especialmente para artefactos que tengan que ver con la asignatura (pipelines, docker, etc.).
 
 Se recomienda Claude Code, GitHub Copilot o Codex, con sus respectivas extensiones en VS Code.
+
+> **OJO**
+>
+> Los commits tienen que estar **firmados con el nombre del estudiante** que los realiza. No debe de haber commits hechos por la IA.
 
 
 ## 7. Cronograma
@@ -298,11 +340,14 @@ gantt
     Boletín 1                  :b1,   2026-09-21, 7d
     Boletín 2                  :b2,   2026-09-28, 7d
     Boletín 3                  :b3,   2026-10-05, 7d
-    Boletines 4, 5 y 6         :b456, 2026-10-19, 7d
-    Boletín 7                  :b7,   2026-10-26, 7d
+    Boletines 4 y 5             :b45,  2026-10-19, 7d
+    Boletín 6                  :b6,   2026-10-26, 7d
  
     section Proyecto global
-    Desarrollo del proyecto global :active, pg, 2026-09-28, 2026-11-02
+    Desarrollo del proyecto global… :active, pg, 2026-09-28, 2026-11-02
+ 
+    section Enunciado común
+    Desarrollo CI…             :active, pc, 2026-09-28, 2026-11-02
  
     section Calendario
     S1 (21 sep)                :milestone, m1, 2026-09-21, 0d
@@ -311,4 +356,5 @@ gantt
     Festivo · sin sesión       :crit, milestone, m0, 2026-10-12, 0d
     S4 (19 oct)                :milestone, m4, 2026-10-19, 0d
     S5 (26 oct)                :milestone, m5, 2026-10-26, 0d
+    Entrega proyecto boletines 1ª parte (2 nov.) :crit, milestone, meb, 2026-11-02, 0d
 ```

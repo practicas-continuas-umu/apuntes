@@ -10,11 +10,11 @@ title: "Boletín 2: GitHub y colaboración con Pull Requests"
 
 ## 1. Objetivos de la sesión
 
-- **Publicar el repositorio** en GitHub y entender la relación local ↔ remoto.
+- **Publicar el repositorio** en GitHub (**repositorio público**) y entender la relación local ↔ remoto.
 - **Dominar el flujo de Pull Requests** (GitHub Flow): rama → PR → revisión → merge.
-- **Revisar el código de otra persona** con criterio, no solo aprobar.
+- **Revisar el código de otra persona**.
 - **Usar Issues, plantillas y CODEOWNERS** para organizar el trabajo.
-- **Configurar branch protection** en `main` y elegir una política de merge justificada.
+- **Configurar branch protection** en `main` y elegir una política de merge.
 
 ## 2. Conceptos clave
 
@@ -32,7 +32,7 @@ Tu repositorio local y el remoto (GitHub) son copias independientes que sincroni
 
 > **CONSEJO**
 >
-> Configura `git config --global pull.ff only`. El `git pull` por defecto crea merge commits automáticos que ensucian el historial sin que te enteres; con `--ff-only` Git te obliga a decidir conscientemente entre `merge` o `rebase`.
+> Configura `git config --global pull.ff only`. El `git pull` por defecto crea merge commits automáticos; con `--ff-only` Git te obliga a decidir conscientemente entre `merge` o `rebase`.
 
 ### 2.2 GitHub Flow
 
@@ -64,7 +64,7 @@ GitHub ofrece tres botones y cada uno produce un historial distinto (ninguno es 
 - Conecta tu repo local con el remoto y haz el primer push:
 
 ```bash
-git remote add origin https://github.com/TU_USUARIO/tareas-api.git
+git remote add origin https://github.com/TU_USUARIO/repo.git
 git branch -M main
 git push -u origin main
 ```
@@ -75,7 +75,7 @@ git push -u origin main
 
 Antes de abrir el primer PR, deja el repositorio preparado para que colaborar sea fácil:
 
-- `.github/PULL_REQUEST_TEMPLATE.md`, que se cargará solo al abrir cada PR:
+- `.github/PULL_REQUEST_TEMPLATE.md`, [plantilla](https://docs.github.com/es/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository) que se cargará solo al abrir cada PR:
 
 ```
 ## Qué hace este PR
@@ -103,9 +103,9 @@ Closes #
 
 - Investiga cómo escoger la estrategia de fusión del PR por defecto y escoge la que consideres.
 
-- Genera un **CONTRIBUTING.md** con instrucciones para contribuir al proyecto (cómo contribuir, política de fusión, etc.).
+- Genera un `CONTRIBUTING.md` con instrucciones para contribuir al proyecto (cómo contribuir, política de fusión, etc.).
 
-### Parte C — Trabajo por Pull Requests (núcleo de la sesión)
+### Parte C — Trabajo por Pull Requests
 
 Realiza al menos **DOS** ciclos completos de PR, cada uno aportando una mejora real a la API (un endpoint nuevo, una validación, un filtro de búsqueda, paginación...). Un integrante de la pareja abre el PR y el otro lo revisa. Luego cambian los roles.
 
@@ -116,7 +116,7 @@ Realiza al menos **DOS** ciclos completos de PR, cada uno aportando una mejora r
 - Implementa el cambio (puedes usar la IA) y añade o ajusta los tests correspondientes.
 - Sube la rama: `git push -u origin feat/busqueda-por-estado`.
 - Abre el PR usando la plantilla. Enlaza el Issue con `Closes #N`.
-- Recibe la revisión, **responde a los comentarios** y sube commits de corrección a la misma rama.
+- Recibe la revisión, responde a los comentarios (si los hay) y sube commits de corrección a la misma rama (si se considera necesario).
 - Fusiona el PR con la estrategia que hayas elegido y borra la rama.
 
 

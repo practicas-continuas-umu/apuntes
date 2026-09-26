@@ -1,19 +1,19 @@
 ---
-title: "Boletín 7: Despliegue con Ansible: cerrar el ciclo"
+title: "Boletín 6: Despliegue con Ansible: cerrar el ciclo"
 ---
 
-# Boletín 7: Despliegue con Ansible: cerrar el ciclo
+# Boletín 6: Despliegue con Ansible: cerrar el ciclo
 
 > **OBJETIVO**
 >
-> Hasta ahora el pipeline construye, valida y publica una imagen Docker en ghcr, pero nadie la ejecuta en un servidor. En esta sesión usarás Ansible para desplegar automáticamente esa imagen en una máquina y dejar la aplicación corriendo, verificada y con posibilidad de vuelta atrás. Cerrarás el ciclo completo: código → imagen publicada → aplicación desplegada y comprobada.
+> Hasta ahora el pipeline construye, valida y publica una imagen Docker en ghcr, pero nadie la ejecuta en ningún sitio. En esta sesión usarás Ansible para desplegar automáticamente esa imagen sobre una pequeña flota de máquinas —dos corriendo la aplicación, otra la base de datos— y dejarla corriendo, verificada y con posibilidad de vuelta atrás. Cerrarás el ciclo completo: código → imagen publicada → aplicación desplegada en varios hosts y comprobada.
 
 ## 1. Objetivos de la sesión
 
 - **Entender qué es Ansible** y el concepto de configuración e infraestructura como código.
-- **Escribir un playbook** que instale Docker, descargue la imagen de ghcr y arranque la aplicación junto a su base de datos.
-- **Desplegar sobre un servidor** (un contenedor que hará de máquina destino) vía SSH.
-- **Verificar el despliegue** con un smoke test y saber **volver atrás** si falla.
+- **Escribir un playbook multi-host** que instale Docker en toda la flota y despliegue la base de datos y la aplicación cada una en su grupo de máquinas.
+- **Desplegar sobre varias máquinas** (varios contenedores que harán de servidores destino, agrupados por rol) vía SSH.
+- **Verificar el despliegue** con un smoke test en cada réplica y saber **volver atrás** si falla.
 - **Disparar el despliegue desde GitHub Actions**, logrando Continuous Deployment de punta a punta.
 
 ## 2. Conceptos clave
@@ -31,6 +31,7 @@ Ansible no necesita instalar nada permanente en la máquina destino: se conecta 
 | Término | Qué es |
 |---|---|
 | inventory | Lista de las máquinas que gestionas y cómo conectarte a ellas. |
+| group | Subconjunto del inventory con un rol común (p. ej. `app`, `db`), al que se dirigen tareas o plays distintos. |
 | playbook | Archivo YAML con la secuencia de tareas a aplicar. |
 | task | Una acción concreta (instalar un paquete, arrancar un contenedor…). |
 | module | El componente que ejecuta cada tarea (p. ej. el módulo docker_container). |
@@ -45,7 +46,7 @@ Ansible no necesita instalar nada permanente en la máquina destino: se conecta 
 
 Es el error más común y el más caro. Si el playbook despliega `:latest` no puedes responder a la pregunta *"¿qué versión está corriendo?"*, no puedes reproducir un despliegue pasado y no puedes volver atrás. Además destruye la idempotencia real: cada ejecución tiene que ir al registro a comprobar si `latest` cambió. Desplegaremos siempre por un **tag inmutable** (`1.2.0` o `sha-abc1234`), que es exactamente para lo que los creaste en el [Boletín 5](boletin5-cd-github-actions.html).
 
-## 3. Trabajo práctico — Núcleo (obligatorio)
+## 3. Trabajo práctico
 
 ### Parte A — Instalar Ansible y sus dependencias
 
@@ -71,62 +72,101 @@ collections:
 # se instala con:  ansible-galaxy collection install -r deploy/requirements.yml
 ```
 
-> **OJO**
->
-> Los módulos `community.docker.*` se ejecutan **en la máquina destino** y necesitan el SDK de Python de Docker allí. Es el fallo número uno de esta sesión (`Failed to import the required Python library (Docker SDK for Python)`): la Parte D lo instala explícitamente como primera tarea.
 
-### Parte B — Preparar un "servidor" destino
+### Parte B — Preparar la flota de servidores destino
 
-En lugar de pagar un servidor en la nube, usarás un contenedor Linux con SSH que hará de máquina destino. Así todo el despliegue ocurre en tu portátil, pero el flujo es idéntico al real.
+En lugar de pagar servidores en la nube, usarás varios contenedores Linux con SSH que harán de máquinas destino. Así todo el despliegue ocurre en tu portátil, pero el flujo —varios hosts, agrupados por rol— es idéntico al real. En vez de una única máquina, vas a levantar **tres "ordenadores"**: dos para la aplicación (`app1`, `app2`) y uno para la base de datos (`db1`).
 
-- Levanta un contenedor que actúe como servidor con SSH habilitado (una imagen Ubuntu con `openssh-server`, accesible en el puerto 2222). Anota IP, puerto, usuario y clave.
-- Como el playbook va a manejar Docker dentro de ese servidor, arráncalo con `--privileged` o monta el socket del anfitrión; documenta qué opción elegiste.
+- Crea `deploy/servidores/docker-compose.yml` con los tres contenedores, cada uno con SSH habilitado y accesible en un puerto distinto del anfitrión:
+
+```yaml
+# deploy/servidores/docker-compose.yml
+# Simula tu infraestructura: NO tiene nada que ver con el docker-compose.yml
+# de la app (Boletín 3). Esto son las "máquinas" a las que Ansible se conectará por SSH.
+services:
+  app1:
+    image: rastasheep/ubuntu-sshd:18.04   # Ubuntu con sshd ya arrancado
+    container_name: app1
+    privileged: true                      # necesario: dentro correrá su propio Docker
+    ports:
+      - "2223:22"
+      - "8081:8080"   # aquí quedará la API una vez desplegada dentro
+
+  app2:
+    image: rastasheep/ubuntu-sshd:18.04
+    container_name: app2
+    privileged: true
+    ports:
+      - "2224:22"
+      - "8082:8080"
+
+  db1:
+    image: rastasheep/ubuntu-sshd:18.04
+    container_name: db1
+    privileged: true
+    ports: [ "2225:22" ]   # el 5432 NO se publica: la BD solo debe ser visible desde app, no desde fuera
+```
 
 > **CONSEJO**
 >
-> El objetivo didáctico es tener una máquina Linux a la que Ansible pueda entrar por SSH. Cómo la consigas (contenedor, VM con Vagrant o multipass, una Raspberry, una VM del free tier de cualquier nube) es secundario; el playbook será el mismo.
+> El objetivo didáctico es tener varias máquinas Linux a las que Ansible pueda entrar por SSH. Cómo las consigas (contenedores como aquí, VMs con Vagrant o multipass, Raspberry Pis, instancias del free tier de una nube) es secundario; el playbook será el mismo. 
 
-- Comprueba que puedes entrar por SSH manualmente antes de usar Ansible:
+- Levanta la flota y comprueba que puedes entrar por SSH manualmente en cada máquina antes de usar Ansible:
 
 ```bash
-ssh usuario@localhost -p 2222
-# si entras tú, Ansible también podrá
+docker compose -f deploy/servidores/docker-compose.yml up -d
+
+ssh root@localhost -p 2223   # app1 (contraseña: root)
+ssh root@localhost -p 2224   # app2
+ssh root@localhost -p 2225   # db1
+# si entras tú a mano, Ansible también podrá
 ```
 
 ### Parte C — El inventario
 
-Crea una carpeta `deploy/` en tu repositorio y dentro un archivo `inventory.ini` que describa el servidor:
+El inventario agrupa las máquinas **por rol**. Crea `deploy/inventory.ini`:
 
-```json
-[servidores]
-destino ansible_host=localhost ansible_port=2222 ansible_user=usuario
+```ini
+[app]
+app1 ansible_host=localhost ansible_port=2223 ansible_user=root
+app2 ansible_host=localhost ansible_port=2224 ansible_user=root
+
+[db]
+db1 ansible_host=localhost ansible_port=2225 ansible_user=root
+
+[servidores:children]
+app
+db
 
 [servidores:vars]
 ansible_python_interpreter=/usr/bin/python3
+ansible_password=root
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 ```
 
-- Verifica la conexión con un "ping" de Ansible (comprueba que llega y puede ejecutar):
+
+> **OJO**
+>
+> `root`/`root` es la contraseña por defecto de la imagen `rastasheep/ubuntu-sshd` que usaste en la Parte B: válida solo para este laboratorio desechable, nunca para un servidor real (ahí usarías clave SSH, como hace el CI en la Parte G). Para que Ansible pueda autenticar por contraseña necesitas tener instalado `sshpass` en tu controlador (`sudo apt install sshpass`); sin él falla con *"to use the 'ssh' connection type with passwords, you must install the sshpass program"*.
+>
+> Además, `sshpass` no puede responder al aviso de *"¿confías en este host?"* la primera vez que te conectas a cada máquina, así que si su clave no está ya en tu `known_hosts` la conexión falla directamente en vez de preguntar (por eso podrías ver un host fallar y otro no, según a cuáles les hicieras ya el `ssh` manual de la Parte B). `ansible_ssh_common_args` de arriba desactiva esa comprobación para todo el grupo `servidores`: razonable en un laboratorio local y desechable como este, pero **nunca** lo hagas contra un servidor real.
+
+- Verifica la conexión con un "ping" de Ansible a toda la flota:
 
 ```bash
 ansible -i deploy/inventory.ini servidores -m ping
 ```
 
-Si responde `pong`, Ansible ya controla el servidor.
+Debes ver `pong` desde `app1`, `app2` y `db1`: Ansible ya controla la flota.
 
 ### Parte D — El playbook de despliegue
 
-Crea `deploy/deploy.yml`. Instala Docker y sus dependencias, hace login en ghcr, despliega la base de datos y arranca la aplicación **por su tag inmutable**:
+Crea `deploy/deploy.yml`. Ya no es un único play: instala Docker en **toda** la flota, despliega la base de datos en `db` y, por último, la aplicación en `app` **por su tag inmutable**, apuntando a la base de datos por el nombre de su host:
 
 ```yaml
 ---
-- name: Desplegar la API de tareas
+- name: Preparar Docker en toda la flota
   hosts: servidores
-  become: true
-
-  vars:
-    version_app: "1.0.0"                                   # se sobreescribe desde el CI
-    imagen: "ghcr.io/TU_USUARIO/tareas-api:{{ version_app }}"
-
   tasks:
     - name: Instalar Docker y el SDK de Python
       apt:
@@ -137,22 +177,16 @@ Crea `deploy/deploy.yml`. Instala Docker y sus dependencias, hace login en ghcr,
     - name: Asegurar que el servicio Docker está arrancado
       service: { name: docker, state: started, enabled: true }
 
-    - name: Login en GHCR
-      community.docker.docker_login:
-        registry_url: ghcr.io
-        username: "{{ ghcr_user }}"
-        password: "{{ ghcr_token }}"
-
-    - name: Red interna de la aplicación
-      community.docker.docker_network: { name: tareas-net }
-
+- name: Desplegar la base de datos
+  hosts: db
+  tasks:
     - name: Base de datos PostgreSQL
       community.docker.docker_container:
         name: tareas-db
         image: postgres:16
         state: started
         restart_policy: always
-        networks: [ { name: tareas-net } ]
+        network_mode: host              # accesible como "{{ inventory_hostname }}:5432" desde app
         volumes: [ "tareas-db-data:/var/lib/postgresql/data" ]
         env:
           POSTGRES_DB: tareas
@@ -162,6 +196,20 @@ Crea `deploy/deploy.yml`. Instala Docker y sus dependencias, hace login en ghcr,
           test: [ "CMD-SHELL", "pg_isready -U {{ db_user }}" ]
           interval: 5s
           retries: 10
+
+- name: Desplegar la API de tareas
+  hosts: app
+  vars:
+    version_app: "1.0.0"                                   # se sobreescribe desde el CI
+    imagen: "ghcr.io/TU_USUARIO/tareas-api:{{ version_app }}"
+    host_bd: "{{ groups['db'][0] }}"                        # primer host del grupo db
+
+  tasks:
+    - name: Login en GHCR
+      community.docker.docker_login:
+        registry_url: ghcr.io
+        username: "{{ ghcr_user }}"
+        password: "{{ ghcr_token }}"
 
     - name: Descargar la imagen de la aplicación
       community.docker.docker_image:
@@ -175,10 +223,9 @@ Crea `deploy/deploy.yml`. Instala Docker y sus dependencias, hace login en ghcr,
         state: started
         recreate: false          # idempotencia: no lo toca si ya es esta versión
         restart_policy: always
-        networks: [ { name: tareas-net } ]
-        ports: [ "8080:8080" ]
+        network_mode: host       # comparte red con esta máquina: así ve a "{{ host_bd }}" por su nombre
         env:
-          SPRING_DATASOURCE_URL: "jdbc:postgresql://tareas-db:5432/tareas"
+          SPRING_DATASOURCE_URL: "jdbc:postgresql://{{ host_bd }}:5432/tareas"
           SPRING_DATASOURCE_USERNAME: "{{ db_user }}"
           SPRING_DATASOURCE_PASSWORD: "{{ db_pass }}"
 
@@ -194,9 +241,13 @@ Crea `deploy/deploy.yml`. Instala Docker y sus dependencias, hace login en ghcr,
 
 > **OJO**
 >
+> Cada "ordenador" es a su vez un contenedor con su propio Docker dentro (Docker-in-Docker). `network_mode: host` hace que el contenedor de dentro comparta la red de la máquina que lo aloja: así puede resolver el nombre de otro host del inventario (`db1`) igual que lo resuelve la propia máquina, y su puerto queda expuesto directamente en ella. Sin esto, el contenedor de la API viviría en una red interna aislada del contenedor de la base de datos y jamás la encontraría.
+
+> **OJO**
+>
 > Las credenciales (`ghcr_token`, `db_pass`…) **nunca** se escriben en el playbook ni se pasan por `--extra-vars` en la línea de comandos (quedan en el historial de tu shell y en la tabla de procesos). Usa **Ansible Vault** en local y **secrets** desde el CI. Ver Parte E y Parte G.
 
-La última tarea es la más importante de todo el boletín: sin ella, "el despliegue ha terminado" solo significa que el contenedor arrancó, no que la aplicación funcione. Un despliegue que no se verifica no es un despliegue, es una esperanza.
+El smoke test es la tarea más importante de todo el boletín: sin ella, "el despliegue ha terminado" solo significa que el contenedor arrancó, no que la aplicación funcione. Como el play `Desplegar la API de tareas` tiene `hosts: app`, Ansible repite todas sus tareas —incluido el smoke test— en `app1` y en `app2`: verificas las dos réplicas en la misma ejecución.
 
 ### Parte E — Proteger las credenciales con Ansible Vault
 
@@ -219,27 +270,30 @@ ansible-vault edit deploy/group_vars/servidores/vault.yml
 
 ### Parte F — Ejecutar el despliegue a mano
 
-- Lanza el playbook contra el servidor:
+- Lanza el playbook contra toda la flota:
 
 ```bash
 ansible-playbook -i deploy/inventory.ini deploy/deploy.yml \
   --ask-vault-pass --extra-vars "version_app=1.0.0"
 ```
 
-- Comprueba que la aplicación quedó corriendo en el servidor:
+- Comprueba que la aplicación quedó corriendo en **las dos réplicas**, ambas hablando con la misma base de datos en `db1`:
 
 ```bash
-curl http://localhost:8080/api/tasks
-# debe responder la API desplegada por Ansible
+curl http://localhost:8081/api/tasks   # app1
+curl http://localhost:8082/api/tasks   # app2
+# las dos deben responder la misma API, desplegada por Ansible
 ```
 
-- Vuelve a ejecutar el mismo playbook y observa la **idempotencia**: Ansible informará de `changed=0` (todo ya está en el estado deseado). Guarda la salida de las dos ejecuciones.
-- **Despliega una versión nueva**: publica un `v1.1.0` en el [Boletín 5](boletin5-cd-github-actions.html) y relanza con `--extra-vars "version_app=1.1.0"`. Comprueba que ahora sí hay cambios y que la API responde con lo nuevo.
-- **Vuelve atrás**: relanza con `version_app=1.0.0` y verifica que el rollback funciona en menos de un minuto. Esto solo es posible porque los tags son inmutables.
+- Vuelve a ejecutar el mismo playbook y observa la **idempotencia**: Ansible informará de `changed=0` en las tres máquinas (todo ya está en el estado deseado). Guarda la salida de las dos ejecuciones.
+- **Despliega una versión nueva**: publica un `v1.1.0` en el [Boletín 5](boletin5-cd-github-actions.html) y relanza con `--extra-vars "version_app=1.1.0"`. Comprueba que ahora sí hay cambios en `app1` y `app2`, y que ambas responden con lo nuevo.
+- **Vuelve atrás**: relanza con `version_app=1.0.0` y verifica que el rollback funciona en menos de un minuto en las dos réplicas. Esto solo es posible porque los tags son inmutables.
 
 ### Parte G — Disparar el despliegue desde GitHub Actions (cierre CD)
 
-Ahora automatizas el despliegue: tras publicar y aprobar la imagen, un job ejecuta Ansible solo.
+Ahora automatizas el despliegue: tras publicar la imagen, un job ejecuta Ansible solo, pero antes debe pasar por una aprobación manual.
+
+- Crea el entorno protegido en GitHub: **Settings → Environments → New environment**, llámalo `produccion` y añade al menos un **Required reviewer**. Cualquier job que declare `environment: produccion` se quedará esperando esa aprobación antes de arrancar.
 
 ```yaml
 name: Deploy
@@ -257,7 +311,7 @@ jobs:
     # SIN esta condición, el despliegue se lanzaría también cuando Release FALLA
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    environment: produccion          # reutiliza la puerta de aprobación del Boletín 5
+    environment: produccion          # se detiene aquí hasta que un reviewer lo apruebe
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -272,7 +326,10 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p 2222 -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          # las tres máquinas viven en el mismo host, cada una en su puerto (app1, app2, db1)
+          for port in 2223 2224 2225; do
+            ssh-keyscan -p "$port" -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          done
 
       - name: Desplegar con Ansible
         env:
@@ -289,13 +346,13 @@ jobs:
 
 > **CONSEJO**
 >
-> Para que el CI alcance tu servidor, este debe ser accesible desde Internet. En clase, esta parte puede quedarse como **demostración conceptual** (mostrar el workflow, explicar el flujo y ejecutar el playbook a mano) si no disponéis de un servidor público. Alternativas si quieres que funcione de verdad: un túnel (Tailscale, ngrok, Cloudflare Tunnel), una VM del free tier de una nube, o un *self-hosted runner* en tu propia red.
+> Para que el CI alcance tu flota, la máquina que la aloja debe ser accesible desde Internet. En clase, esta parte puede quedarse como **demostración conceptual** (mostrar el workflow, explicar el flujo y ejecutar el playbook a mano) si no disponéis de una máquina pública. Alternativas si quieres que funcione de verdad: un túnel (Tailscale, ngrok, Cloudflare Tunnel), una VM del free tier de una nube, o un *self-hosted runner* en tu propia red.
 
 ### Parte H — Versionar y documentar
 
 - Añade la carpeta `deploy/` al repositorio vía Pull Request revisado por tu pareja.
 - Documenta en el README cómo desplegar a mano, cómo se dispara el despliegue automático y **cómo hacer rollback**.
-- Dibuja el flujo completo (Mermaid): *PR → CI valida → merge → Release construye, escanea y publica → aprobación → Deploy ejecuta Ansible → smoke test → app corriendo*.
+- Dibuja el flujo completo (Mermaid): *PR → CI valida → merge → Release construye y publica → aprobación → Deploy ejecuta Ansible → smoke test → app corriendo*.
 
 ## 4. Ampliación (para nota alta)
 
@@ -303,7 +360,7 @@ jobs:
 - **ansible-lint** como job del pipeline, y `ansible-playbook --check --diff` (modo simulación) como paso previo obligatorio al despliegue real.
 - **Rollback automático**: si el smoke test falla, que el playbook (con `block`/`rescue`) vuelva a desplegar la versión anterior y marque el job como fallido.
 - **Plantillas Jinja2**: genera el `docker-compose.yml` del servidor con `template:` y un `handler` que reinicie solo si el archivo cambió.
-- **Verificación de la firma** de la imagen con cosign antes de arrancarla, si hiciste esa ampliación en el [Boletín 6](boletin6-pipeline-robusto.html).
+- **Balanceador delante de las réplicas**: añade un cuarto "ordenador" con nginx que reparta tráfico entre `app1` y `app2`, y publica hacia fuera solo el puerto del balanceador.
 - **Compara Ansible con las alternativas** en media página: Docker Compose por SSH, Kubernetes, o un PaaS. ¿Cuándo elegirías cada uno?
 
 ## 5. Cierre de la sesión
@@ -313,7 +370,7 @@ jobs:
 - **`Failed to import the required Python library (Docker SDK for Python)`.** Es el error clásico. ¿En qué máquina falta la librería, en el controlador o en el destino? Explica por qué la respuesta no es obvia.
 - **El playbook dice `changed=0` pero la aplicación sigue con la versión antigua.** Estabas desplegando `:latest`. Explica exactamente por qué Ansible cree que no hay nada que hacer y cómo lo resuelve el tag inmutable.
 - **El workflow Deploy se ejecuta aunque Release haya fallado.** Identifica la línea que falta y razona qué consecuencia tendría en producción desplegar una imagen que nunca se llegó a publicar.
-- **La API arranca y muere en bucle.** El contenedor de la base de datos existe pero la API no la encuentra. Revisa la red de Docker y el nombre de host del `SPRING_DATASOURCE_URL`.
+- **La API arranca y muere en bucle.** El contenedor de la base de datos existe en `db1`, pero la API en `app1`/`app2` no la encuentra. Revisa que el contenedor de la API tenga `network_mode: host` (si no, vive en una red aislada de `db1`) y que `SPRING_DATASOURCE_URL` apunte al host correcto del grupo `db`.
 
 ### Antes de terminar
 
@@ -326,8 +383,8 @@ jobs:
 >
 > El repositorio en GitHub, con:
 
-- Carpeta `deploy/` con `inventory.ini`, `deploy.yml` y `requirements.yml`.
-- Evidencia de un despliegue **ejecutado a mano** con Ansible (la app responde en el servidor).
+- Carpeta `deploy/` con `inventory.ini` (grupos `app` y `db`), `deploy.yml`, `requirements.yml` y `servidores/docker-compose.yml` con la flota simulada.
+- Evidencia de un despliegue **ejecutado a mano** con Ansible (la app responde en las dos réplicas, `app1` y `app2`).
 - Demostración de **idempotencia**: salida de dos ejecuciones seguidas, la segunda con `changed=0`.
 - Evidencia de un **despliegue de versión nueva** y de un **rollback** a la anterior.
 - Smoke test dentro del playbook que verifica `/actuator/health`.
@@ -339,18 +396,18 @@ jobs:
 
 | Aspecto | Peso |
 |---|---|
-| Playbook correcto: instala dependencias, despliega BD y API y arranca el contenedor | 25% |
+| Playbook correcto: instala dependencias en toda la flota, despliega la BD en `db` y la API en los dos hosts de `app` | 25% |
 | Despliegue por tag inmutable, con actualización de versión y rollback demostrados | 20% |
 | Idempotencia demostrada y smoke test que verifica el despliegue | 15% |
 | Integración del despliegue con GitHub Actions (condición de éxito y aprobación) | 15% |
 | Gestión segura de credenciales con Vault y secrets | 10% |
 | Diario de IA (docs/AI_LOG.md) y documentación del flujo completo | 15% |
-| Bonus — Ampliación: roles, ansible-lint, rollback automático, plantillas, cosign | hasta +1,5 |
+| Bonus — Ampliación: roles, ansible-lint, rollback automático, plantillas, balanceador | hasta +1,5 |
 
 ## 8. Resultado final del curso
 
 > **OBJETIVO**
 >
-> Con este boletín cierras el ciclo completo de prácticas continuas: una API REST en Maven con migraciones versionadas, contenerizada con Docker, validada y construida por un pipeline de CI/CD que controla la calidad y la seguridad de la cadena de suministro, publicada como imagen versionada y trazable y, finalmente, desplegada automáticamente en un servidor mediante Ansible, con verificación y vuelta atrás. Desde un commit hasta la aplicación corriendo: todo automatizado, versionado y reproducible.
+> Con este boletín cierras el ciclo completo de prácticas continuas: una API REST en Maven con migraciones versionadas, contenerizada con Docker, validada y construida por un pipeline de CI/CD que controla la calidad, publicada como imagen versionada y trazable y, finalmente, desplegada automáticamente en varios servidores mediante Ansible, con verificación y vuelta atrás. Desde un commit hasta la aplicación corriendo: todo automatizado, versionado y reproducible.
 
 Y algo que no aparece en ninguna rúbrica: sabes qué hace cada pieza y por qué está ahí. Eso es lo que distingue a quien monta un pipeline de quien lo mantiene cuando se rompe a las tres de la madrugada.

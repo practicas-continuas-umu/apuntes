@@ -157,25 +157,51 @@ async function buildSlides() {
     const { attributes, body } = frontMatter(raw)
     const title = attributes.title || titleFromMarkdown(body, slug)
 
-    const exitCode = await marpCli([
-      srcPath,
-      '--html',
-      '--allow-local-files',
-      '--theme-set',
-      THEME,
-      '-o',
-      outPath,
-    ])
+    // Marp no sabe renderizar bloques ```mermaid (eso lo hace mermaid.js en
+    // el navegador). Los convertimos a <pre class="mermaid"> en crudo: como
+    // <pre> es una etiqueta de bloque HTML reconocida por CommonMark, Marp
+    // (con --html) la deja pasar tal cual, igual que hace ya con los <div>
+    // de layout de estas diapositivas.
+    const mermaidProcessedRaw = raw.replace(
+      /```mermaid\n([\s\S]*?)```/g,
+      (_, code) => `<pre class="mermaid">\n${md.utils.escapeHtml(code)}</pre>\n`,
+    )
+    const hasMermaid = mermaidProcessedRaw !== raw
+
+    // Si hay diagramas, Marp tiene que leer la versión ya convertida. Se
+    // escribe como fichero temporal junto al original para que las
+    // referencias relativas a assets/ sigan resolviendo igual.
+    const marpSrcPath = hasMermaid ? path.join(SLIDES_SRC, `.__mermaid_tmp_${file}`) : srcPath
+    if (hasMermaid) {
+      await fs.writeFile(marpSrcPath, mermaidProcessedRaw, 'utf-8')
+    }
+
+    let exitCode
+    try {
+      exitCode = await marpCli([
+        marpSrcPath,
+        '--html',
+        '--allow-local-files',
+        '--theme-set',
+        THEME,
+        '-o',
+        outPath,
+      ])
+    } finally {
+      if (hasMermaid) await fs.rm(marpSrcPath, { force: true })
+    }
     if (exitCode !== 0) {
       throw new Error(`Marp CLI falló al generar ${file} (código ${exitCode})`)
     }
 
     // Marp CLI no tiene una opción para fijar el favicon: lo inyectamos
-    // después, a mano, en el <head> del HTML ya generado.
+    // después, a mano, en el <head> del HTML ya generado. Si hay diagramas
+    // Mermaid, también inyectamos aquí el script que los renderiza (Marp no
+    // sabe hacerlo).
     let generatedHtml = await fs.readFile(outPath, 'utf-8')
     generatedHtml = generatedHtml.replace('<head>', `<head>${FAVICON_LINK}`)
-    if (generatedHtml.includes('language-mermaid')) {
-      generatedHtml = generatedHtml.replace('</body>', `${SLIDES_MERMAID_SCRIPT}</body>`)
+    if (hasMermaid) {
+      generatedHtml = generatedHtml.replace('</body>', `${MERMAID_PAN_ZOOM_SCRIPT}</body>`)
     }
     await fs.writeFile(outPath, generatedHtml, 'utf-8')
 
