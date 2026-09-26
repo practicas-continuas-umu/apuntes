@@ -320,6 +320,57 @@ function setupPanZoom(container) {
 }
 </script>`
 
+// Añade un botón "copiar" a cada bloque de código (excepto los diagramas Mermaid).
+const COPY_BUTTON_SCRIPT = `<script>
+(function () {
+  var ICON_COPY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>'
+  var ICON_OK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>'
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text)
+    }
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement('textarea')
+      ta.value = text
+      ta.style.position = 'fixed'
+      ta.style.opacity = '0'
+      document.body.appendChild(ta)
+      ta.select()
+      var ok = false
+      try { ok = document.execCommand('copy') } catch (e) {}
+      document.body.removeChild(ta)
+      ok ? resolve() : reject()
+    })
+  }
+
+  document.querySelectorAll('.markdown-body pre:not(.mermaid)').forEach(function (pre) {
+    var wrap = document.createElement('div')
+    wrap.className = 'code-block'
+    pre.parentNode.insertBefore(wrap, pre)
+    wrap.appendChild(pre)
+
+    var btn = document.createElement('button')
+    btn.type = 'button'
+    btn.className = 'copy-btn'
+    btn.title = 'Copiar código'
+    btn.setAttribute('aria-label', 'Copiar código')
+    btn.innerHTML = ICON_COPY
+    btn.addEventListener('click', function () {
+      copyText(pre.innerText.replace(/\\n$/, '')).then(function () {
+        btn.classList.add('copied')
+        btn.innerHTML = ICON_OK + 'Copiado'
+        setTimeout(function () {
+          btn.classList.remove('copied')
+          btn.innerHTML = ICON_COPY
+        }, 1500)
+      })
+    })
+    wrap.appendChild(btn)
+  })
+})()
+</script>`
+
 function practicaTemplate({ title, contentHtml }) {
   const hasMermaid = contentHtml.includes('class="mermaid"')
   return `<!doctype html>
@@ -383,6 +434,51 @@ ${FAVICON_LINK}
   .mz-toolbar button:hover {
     background: #f0f2f4;
   }
+  .code-block {
+    position: relative;
+  }
+  .code-block > pre {
+    margin-bottom: 0;
+  }
+  .code-block {
+    margin-bottom: 1rem;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.45rem;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #57606a;
+    font: 12px/1 system-ui, sans-serif;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .code-block:hover .copy-btn,
+  .copy-btn:focus-visible,
+  .copy-btn.copied {
+    opacity: 1;
+  }
+  .copy-btn:hover {
+    background: #f3f4f6;
+  }
+  .copy-btn.copied {
+    color: #1a7f37;
+  }
+  .copy-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+  @media (hover: none) {
+    .copy-btn { opacity: 1; }
+  }
 </style>
 </head>
 <body>
@@ -390,6 +486,7 @@ ${FAVICON_LINK}
     ${contentHtml}
   </article>
   ${hasMermaid ? MERMAID_PAN_ZOOM_SCRIPT : ''}
+  ${COPY_BUTTON_SCRIPT}
 </body>
 </html>
 `
