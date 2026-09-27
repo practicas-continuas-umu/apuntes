@@ -159,6 +159,10 @@ Realiza al menos **DOS** ciclos completos de PR, cada uno aportando una mejora r
 - Abre un PR con la segunda rama y observa que hay conflicto.
 - Haz en local un rebase de la segunda rama sobre `main` y resuelve el conflicto (puede requerir `git push --force-with-lease`). Haz push y observa como GitHub ha actualizado el PR automáticamente y ya no hay conflicto.
 
+> Adjunta las capturas pertinentes con el PR abierto, el conflicto y la resolución del mismo.
+
 ### Parte F — PR con fork
 
 Ahora vas a colaborar en un repositorio sobre el que no tienes permisos de escritura. Abre un issue no trivial en tu proyecto y pide a otra pareja que haga un PR para resolverlo desde un fork. Haced lo mismo en el respotorio de la otra pareja.
+
+> En la memoria debe ir una captura y link al PR abierto y aprobado en el repositorio de la otra pareja.
