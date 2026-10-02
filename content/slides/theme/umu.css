@@ -131,6 +131,15 @@ pre.mermaid {
   padding-top: 2.2rem;
 }
 
+/* Diagramas más altos que anchos (p.ej. sequenceDiagram) no caben enteros
+   a tamaño natural: se escalan para que quepan en la diapositiva. El pan
+   y zoom del toolbar siguen permitiendo verlos a tamaño real. */
+pre.mermaid svg {
+  max-height: 480px;
+  width: auto;
+  max-width: 100%;
+}
+
 pre.mermaid.mz-wrap {
   position: relative;
   overflow: hidden;

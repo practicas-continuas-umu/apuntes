@@ -57,7 +57,7 @@ Tipos principales:
 
 <center>
 
-![w:380](assets/tema4/hypervisor.png)
+![w:480](assets/tema4/hypervisor.png)
 
 </center>
 
@@ -156,6 +156,30 @@ docker run -d -p 8080:80 nginx
 3. Crea el contenedor: monta las capas de la imagen, configura *namespaces* y un *cgroup*, y el mapeo de puertos (8080 → 80).
 4. Lanza el proceso principal (`nginx`) dentro de ese entorno aislado.
 5. Las peticiones a `localhost:8080` se redirigen al puerto 80 del contenedor.
+
+---
+
+## `docker run`: diagrama de secuencia
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant C as Cliente Docker
+    participant D as Daemon
+    participant H as Docker Hub
+    participant K as Contenedor
+
+    U->>C: docker run -d -p 8080:80 nginx
+    C->>D: petición a la API (socket/TCP)
+    alt Imagen no está en local
+        D->>H: pull de la imagen nginx
+        H-->>D: capas de la imagen
+    end
+    D->>D: monta capas, crea namespace + cgroup, mapea 8080→80
+    D->>K: arranca el proceso nginx
+    D-->>C: ID del contenedor
+    Note over U,K: localhost:8080 → puerto 80 del contenedor
+```
 
 ---
 
@@ -365,4 +389,4 @@ Un único `docker compose up` construye `web`, levanta `db` y los conecta en una
 Docker empaqueta la aplicación y sus dependencias en contenedores reproducibles.
 Docker Compose orquesta aplicaciones multicontenedor con un solo fichero.
 
-👉 **Práctica 3: Docker**
+👉 Práctica 3: Docker
