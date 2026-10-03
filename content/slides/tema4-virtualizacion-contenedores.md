@@ -83,9 +83,14 @@ Un contenedor es un **proceso aislado** que incluye todo lo necesario para ejecu
 
 </center>
 
+
+La tecnología de contenedores más usada es **Docker**.
+
 ---
 
 ## Comparativa
+
+<center>
 
 | | Contenedores | Máquinas virtuales |
 |---|---|---|
@@ -94,8 +99,8 @@ Un contenedor es un **proceso aislado** que incluye todo lo necesario para ejecu
 | **Aislamiento** | Menor (comparten kernel) | Mayor (aislamiento total) |
 | **Flexibilidad** | Debe encajar con el kernel del host | Cualquier SO |
 | **Recursos** | Proceso + librerías (ligero) | RAM + CPU + SO completo (pesado) |
+</center>
 
-La tecnología de contenedores más usada es **Docker**.
 
 ---
 

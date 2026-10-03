@@ -345,7 +345,7 @@ En este `docker-compose.yml` se utilizan tres formas distintas de trabajar con v
   POSTGRES_DB: ${POSTGRES_DB}
   ```
 
-  El valor puede proceder, por ejemplo, del entorno desde el que se ejecuta `docker compose` o del fichero `.env`.
+  El valor puede proceder, por ejemplo, del entorno desde el que se ejecuta `docker compose` o del fichero `.env` (da prioridad a las variables de entorno donde se ejecuta el compose).
 
 - **`${VAR:?mensaje}`**: obliga a que la variable exista y tenga un valor no vacío. Si no es así, Compose no arranca y muestra el mensaje indicado.
 
