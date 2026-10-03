@@ -76,13 +76,14 @@ code {
 }
 
 pre {
-  background: #1e1e2e;
+  background: #f0f2f4;
+  border: 1px solid #d7dde3;
   border-radius: 8px;
 }
 
 pre code {
   background: transparent;
-  color: #f2f2f2;
+  color: #1a1a1a;
 }
 
 table {

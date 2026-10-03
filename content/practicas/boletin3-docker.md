@@ -6,7 +6,7 @@ title: "Boletín 3: Docker: contenerizar la aplicación"
 
 > **OBJETIVO**
 >
-> Empaquetar tu API en una imagen Docker portable, ligera y segura, eliminando el clásico "en mi máquina funciona". Escribirás un Dockerfile multi-stage y levantarás la aplicación junto a una base de datos PostgreSQL con Docker Compose.
+> Empaquetar tu API en una imagen Docker portable y ligera, eliminando el clásico "en mi máquina funciona". Escribirás un Dockerfile multi-stage y levantarás la aplicación junto a una base de datos PostgreSQL con Docker Compose.
 
 ## 1. Objetivos de la sesión
 

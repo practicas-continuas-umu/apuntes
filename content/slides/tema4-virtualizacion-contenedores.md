@@ -20,8 +20,7 @@ MISUM · Universidad de Murcia
 ## Índice
 
 1. Virtualización: concepto y tipos
-2. Contenedores vs máquinas virtuales
-3. Docker: arquitectura y componentes
+2. Docker: arquitectura y componentes
 4. Imágenes y Dockerfile
 5. Redes y volúmenes en Docker
 6. Docker Compose
@@ -71,11 +70,6 @@ Tipos principales:
 
 ---
 
-<!-- _class: divider -->
-
-# 2. Contenedores vs máquinas virtuales
-
----
 
 ## Virtualización de sistema operativo
 
@@ -118,7 +112,7 @@ DevOps necesita entornos **consistentes** en desarrollo, pruebas y producción:
 
 <!-- _class: divider -->
 
-# 3. Docker
+# 2. Docker
 
 ---
 
@@ -323,11 +317,11 @@ docker compose up
 
 <center>
 
-![w:280](assets/tema4/compose.png)
+![w:380](assets/tema4/compose.png)
 
 </center>
 
-Muchos ejemplos en: `github.com/docker/awesome-compose`
+Muchos ejemplos en: [github.com/docker/awesome-compose](https://github.com/docker/awesome-compose)
 
 ---
 
@@ -352,7 +346,6 @@ volumes:
   datos_db:
 ```
 
-Un único `docker compose up` construye `web`, levanta `db` y los conecta en una red común.
 
 ---
 
@@ -365,4 +358,4 @@ Un único `docker compose up` construye `web`, levanta `db` y los conecta en una
 Docker empaqueta la aplicación y sus dependencias en contenedores reproducibles.
 Docker Compose orquesta aplicaciones multicontenedor con un solo fichero.
 
-👉 **Práctica 3: Docker**
+👉 Práctica 3: Docker
