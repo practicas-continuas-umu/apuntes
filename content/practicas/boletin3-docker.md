@@ -34,7 +34,6 @@ Compilar requiere Maven y el JDK completo (cientos de MB). Pero para ejecutar so
 | Término | Qué es |
 |---|---|
 | volumen nombrado | Almacenamiento gestionado por Docker que sobrevive a `docker compose down` (pero no a `docker compose down -v`). |
-| bind mount | Una carpeta de tu máquina montada dentro del contenedor. |
 | healthcheck | Comando que Docker ejecuta periódicamente para saber si el servicio está listo, no solo arrancado. |
 | red de Compose | Red privada donde cada servicio es alcanzable por su nombre (`db`, `api`). |
 
@@ -163,6 +162,12 @@ Hasta ahora la app usaba H2 en memoria. Vamos a darle persistencia real con Post
 Sustituye H2 por el driver de PostgreSQL. Puedes pedírselo a una IA.
 
 **Prompt de ejemplo**: Modifica ligeramente el proyecto existente para sustituir la base de datos H2 en memoria por PostgreSQL, manteniendo Spring Data JPA con Hibernate como capa de persistencia. 
+
+Comprueba que en `application.properties` no queda ninguna propiedad de H2 y que está la línea:
+
+```text
+spring.jpa.hibernate.ddl-auto=update
+```
 
 A partir de aquí la imagen ya no arranca sola con `docker run` (no tiene base de datos). Desde ahora levantaremos siempre el stack con Compose.
 
@@ -430,5 +435,5 @@ Esta parte no debe modificar el repositorio del proyecto. Escoge un repositorio 
 1. Elegir repositorio. Selecciona un repositorio open-source popular y público (con >1k de estrellas o uso real).
 2. Analizar requisitos. Identifica lenguaje, versión/es, gestor de paquetes, herramientas de build y cualquier dependencia del sistema. Cita la fuente (README, docs oficiales, pyproject.toml, package.json, pom.xml, etc.).
 3. Crear Dockerfile. Escribe un Dockerfile que instale todas las dependencias y herramientas necesarias para ejecutar los tests del proyecto.
-4. Construir y ejecutar. Construye la imagen y ejecuta los tests dentro del contenedor, asegurándote de que todos pasan correctamente. 
+4. Construir y ejecutar. Construye la imagen y ejecuta los tests dentro del contenedor, asegurándote de que todos pasan correctamente. Monta el código fuente del proyecto median
 
