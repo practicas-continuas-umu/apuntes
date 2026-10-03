@@ -179,7 +179,6 @@ services:
       POSTGRES_USER: app
       POSTGRES_PASSWORD: secret_local_dev
     # Solo para conectarte desde tu máquina con un cliente SQL.
-    # La API no lo necesita: se comunica con db por la red de Compose.
     ports: ["127.0.0.1:5432:5432"]
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -333,10 +332,28 @@ volumes:
   db-data:
 ```
 
-Hay dos sintaxis nuevas:
+En este `docker-compose.yml` se utilizan tres formas distintas de trabajar con variables:
 
-- **`${POSTGRES_PASSWORD:?mensaje}`**: si la variable no está definida, Compose se niega a arrancar y muestra el mensaje. Es mucho mejor que arrancar con una contraseña vacía.
-- **`$${POSTGRES_USER}`** en el healthcheck: el `$$` escapa el `$`, de modo que Compose **no** sustituye la variable y la deja para que la resuelva el shell *dentro* del contenedor `db`, donde ya existe como variable de entorno.
+- **`${VAR}`**: Docker Compose sustituye la variable por su valor antes de crear el contenedor.
+
+  ```yaml
+  POSTGRES_DB: ${POSTGRES_DB}
+  ```
+
+  El valor puede proceder, por ejemplo, del entorno desde el que se ejecuta `docker compose` o del fichero `.env`.
+
+- **`${VAR:?mensaje}`**: obliga a que la variable exista y tenga un valor no vacío. Si no es así, Compose no arranca y muestra el mensaje indicado.
+
+  ```yaml
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en el fichero .env}
+  ```
+
+- **`$${VAR}`**: el `$$` escapa el símbolo `$`, por lo que Docker Compose no sustituye la variable. Se deja como `${VAR}` para que sea resuelta posteriormente dentro del contenedor.
+
+  ```yaml
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+  ```
 
 #### Paso 6 — Verificar la sustitución
 
