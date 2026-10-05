@@ -34,7 +34,6 @@ Compilar requiere Maven y el JDK completo (cientos de MB). Pero para ejecutar so
 | Término | Qué es |
 |---|---|
 | volumen nombrado | Almacenamiento gestionado por Docker que sobrevive a `docker compose down` (pero no a `docker compose down -v`). |
-| bind mount | Una carpeta de tu máquina montada dentro del contenedor. |
 | healthcheck | Comando que Docker ejecuta periódicamente para saber si el servicio está listo, no solo arrancado. |
 | red de Compose | Red privada donde cada servicio es alcanzable por su nombre (`db`, `api`). |
 
@@ -164,6 +163,12 @@ Sustituye H2 por el driver de PostgreSQL. Puedes pedírselo a una IA.
 
 **Prompt de ejemplo**: Modifica ligeramente el proyecto existente para sustituir la base de datos H2 en memoria por PostgreSQL, manteniendo Spring Data JPA con Hibernate como capa de persistencia. 
 
+Comprueba que en `application.properties` no queda ninguna propiedad de H2 y que está la línea:
+
+```text
+spring.jpa.hibernate.ddl-auto=update
+```
+
 A partir de aquí la imagen ya no arranca sola con `docker run` (no tiene base de datos). Desde ahora levantaremos siempre el stack con Compose.
 
 #### D.2 docker-compose.yml
@@ -179,7 +184,6 @@ services:
       POSTGRES_USER: app
       POSTGRES_PASSWORD: secret_local_dev
     # Solo para conectarte desde tu máquina con un cliente SQL.
-    # La API no lo necesita: se comunica con db por la red de Compose.
     ports: ["127.0.0.1:5432:5432"]
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -333,10 +337,28 @@ volumes:
   db-data:
 ```
 
-Hay dos sintaxis nuevas:
+En este `docker-compose.yml` se utilizan tres formas distintas de trabajar con variables:
 
-- **`${POSTGRES_PASSWORD:?mensaje}`**: si la variable no está definida, Compose se niega a arrancar y muestra el mensaje. Es mucho mejor que arrancar con una contraseña vacía.
-- **`$${POSTGRES_USER}`** en el healthcheck: el `$$` escapa el `$`, de modo que Compose **no** sustituye la variable y la deja para que la resuelva el shell *dentro* del contenedor `db`, donde ya existe como variable de entorno.
+- **`${VAR}`**: Docker Compose sustituye la variable por su valor antes de crear el contenedor.
+
+  ```yaml
+  POSTGRES_DB: ${POSTGRES_DB}
+  ```
+
+  El valor puede proceder, por ejemplo, del entorno desde el que se ejecuta `docker compose` o del fichero `.env` (da prioridad a las variables de entorno donde se ejecuta el compose).
+
+- **`${VAR:?mensaje}`**: obliga a que la variable exista y tenga un valor no vacío. Si no es así, Compose no arranca y muestra el mensaje indicado.
+
+  ```yaml
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en el fichero .env}
+  ```
+
+- **`$${VAR}`**: el `$$` escapa el símbolo `$`, por lo que Docker Compose no sustituye la variable. Se deja como `${VAR}` para que sea resuelta posteriormente dentro del contenedor.
+
+  ```yaml
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+  ```
 
 #### Paso 6 — Verificar la sustitución
 
@@ -413,5 +435,5 @@ Esta parte no debe modificar el repositorio del proyecto. Escoge un repositorio 
 1. Elegir repositorio. Selecciona un repositorio open-source popular y público (con >1k de estrellas o uso real).
 2. Analizar requisitos. Identifica lenguaje, versión/es, gestor de paquetes, herramientas de build y cualquier dependencia del sistema. Cita la fuente (README, docs oficiales, pyproject.toml, package.json, pom.xml, etc.).
 3. Crear Dockerfile. Escribe un Dockerfile que instale todas las dependencias y herramientas necesarias para ejecutar los tests del proyecto.
-4. Construir y ejecutar. Construye la imagen y ejecuta los tests dentro del contenedor, asegurándote de que todos pasan correctamente. 
+4. Construir y ejecutar. Construye la imagen y ejecuta los tests dentro del contenedor, asegurándote de que todos pasan correctamente. Monta el código fuente del proyecto median
 
