@@ -14,7 +14,43 @@
   var presentBtn = document.getElementById('present-btn')
   var mdBtn = document.getElementById('md-btn')
 
+  var themeBtn = document.getElementById('theme-btn')
+  var themeLabel = themeBtn.querySelector('.theme-label')
+
   var itemsById = {}
+
+  function currentTheme() {
+    return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+  }
+
+  function updateThemeButton() {
+    var dark = currentTheme() === 'dark'
+    themeBtn.setAttribute('aria-pressed', String(dark))
+    themeLabel.textContent = dark ? 'Modo claro' : 'Modo oscuro'
+  }
+
+  themeBtn.addEventListener('click', function () {
+    var next = currentTheme() === 'dark' ? 'light' : 'dark'
+    document.documentElement.dataset.theme = next
+    try {
+      localStorage.setItem('theme', next)
+    } catch (e) {
+      // Sin localStorage el tema solo dura mientras la página siga abierta.
+    }
+    updateThemeButton()
+    // Los boletines leen el tema al cargarse (CSS y Mermaid): se recargan
+    // para aplicarlo. Las diapositivas no tienen modo oscuro.
+    var item = itemsById[decodeURIComponent(location.hash.replace(/^#/, ''))]
+    if (item && item.type !== 'slides') {
+      try {
+        viewer.contentWindow.location.reload()
+      } catch (e) {
+        viewer.src = item.file
+      }
+    }
+  })
+
+  updateThemeButton()
 
   function renderNavList(container, items) {
     container.innerHTML = ''

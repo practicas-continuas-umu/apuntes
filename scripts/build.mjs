@@ -227,7 +227,11 @@ async function buildSlides() {
 // botones +/-/reset para quien no tenga ratón con rueda.
 const MERMAID_PAN_ZOOM_SCRIPT = `<script src="../vendor/mermaid.min.js"></script>
 <script>
-mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' })
+mermaid.initialize({
+  startOnLoad: false,
+  securityLevel: 'loose',
+  theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default',
+})
 mermaid.run({ querySelector: '.mermaid' }).then(function () {
   document.querySelectorAll('pre.mermaid').forEach(setupPanZoom)
 })
@@ -380,14 +384,36 @@ function practicaTemplate({ title, contentHtml }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
 ${FAVICON_LINK}
-<link rel="stylesheet" href="../vendor/github-markdown.css">
-<link rel="stylesheet" href="../vendor/highlight.css">
+<script>
+  // El tema (claro/oscuro) lo elige el usuario en el shell y se guarda en localStorage.
+  var theme = 'light'
+  try { if (localStorage.getItem('theme') === 'dark') theme = 'dark' } catch (e) {}
+  document.documentElement.dataset.theme = theme
+  document.write(
+    '<link rel="stylesheet" href="../vendor/github-markdown-' + theme + '.css">' +
+    '<link rel="stylesheet" href="../vendor/highlight-' + theme + '.css">'
+  )
+</script>
 <style>
   body {
     margin: 0;
     padding: 2.5rem 1.5rem 4rem;
     background: #ffffff;
   }
+  :root[data-theme="dark"] body { background: #0d1117; }
+  :root[data-theme="dark"] .mz-toolbar button {
+    background: #161b22;
+    border-color: #30363d;
+    color: #e6edf3;
+  }
+  :root[data-theme="dark"] .mz-toolbar button:hover { background: #21262d; }
+  :root[data-theme="dark"] .copy-btn {
+    background: #161b22;
+    border-color: #30363d;
+    color: #9da7b3;
+  }
+  :root[data-theme="dark"] .copy-btn:hover { background: #21262d; }
+  :root[data-theme="dark"] .copy-btn.copied { color: #3fb950; }
   .markdown-body {
     box-sizing: border-box;
     max-width: 860px;
@@ -529,13 +555,19 @@ async function buildPracticas() {
 async function copyVendorAssets() {
   const vendorDir = path.join(SITE, 'vendor')
   await fs.mkdir(vendorDir, { recursive: true })
-  await fs.copyFile(
-    path.join(ROOT, 'node_modules', 'github-markdown-css', 'github-markdown.css'),
-    path.join(vendorDir, 'github-markdown.css'),
-  )
+  for (const theme of ['light', 'dark']) {
+    await fs.copyFile(
+      path.join(ROOT, 'node_modules', 'github-markdown-css', `github-markdown-${theme}.css`),
+      path.join(vendorDir, `github-markdown-${theme}.css`),
+    )
+  }
   await fs.copyFile(
     path.join(ROOT, 'node_modules', 'highlight.js', 'styles', 'github.css'),
-    path.join(vendorDir, 'highlight.css'),
+    path.join(vendorDir, 'highlight-light.css'),
+  )
+  await fs.copyFile(
+    path.join(ROOT, 'node_modules', 'highlight.js', 'styles', 'github-dark.css'),
+    path.join(vendorDir, 'highlight-dark.css'),
   )
   await fs.copyFile(
     path.join(ROOT, 'node_modules', 'mermaid', 'dist', 'mermaid.min.js'),

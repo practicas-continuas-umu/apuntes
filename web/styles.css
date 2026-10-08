@@ -155,6 +155,11 @@ body {
   line-height: 1.2;
 }
 
+.toolbar-btn .btn-icon {
+  vertical-align: -2px;
+  margin-left: 0.2rem;
+}
+
 .toolbar-btn:hover {
   background: var(--color-primary-dark);
 }
@@ -274,30 +279,49 @@ body {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-app: #14181d;
-    --border: #2a3038;
-  }
+/* Modo oscuro: se activa con el botón de la cabecera (data-theme en <html>). */
 
-  body {
-    color: #e7edf3;
-  }
+:root[data-theme="dark"] {
+  --bg-app: #14181d;
+  --border: #2a3038;
+}
 
-  .viewer-header {
-    background: #1b2129;
-  }
+:root[data-theme="dark"] body {
+  color: #e7edf3;
+}
 
-  .home-section h2 {
-    color: #9fb3c8;
-  }
+:root[data-theme="dark"] .viewer-header {
+  background: #1b2129;
+}
 
-  .home-card {
-    background: #1b2129;
-    color: #e7edf3;
-  }
+:root[data-theme="dark"] .viewer-title {
+  color: #e7edf3;
+}
 
-  .home-empty {
-    color: #9fb3c8;
-  }
+:root[data-theme="dark"] .home-section h2 {
+  color: #9fb3c8;
+}
+
+:root[data-theme="dark"] .home-card {
+  background: #1b2129;
+  color: #e7edf3;
+}
+
+:root[data-theme="dark"] .home-empty {
+  color: #9fb3c8;
+}
+
+/* Botón de tema: muestra el icono de la acción contraria al modo actual. */
+.theme-btn .icon-sun,
+:root[data-theme="dark"] .theme-btn .icon-moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-btn .icon-sun {
+  display: inline;
+}
+
+.theme-btn .btn-icon {
+  margin-left: 0;
+  margin-right: 0.3rem;
 }
