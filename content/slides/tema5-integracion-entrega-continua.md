@@ -108,22 +108,16 @@ Los *workflows* se definen en YAML dentro de `.github/workflows/`:
 ```yaml
 # .github/workflows/ci.yml
 name: CI
-
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-
+  push: { branches: ["main"] }
+  pull_request: { branches: ["main"] }
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
-        with:
-          java-version: "17"
-          distribution: "temurin"
+        with: { java-version: "17", distribution: "temurin" }
       - run: mvn -B clean verify
 ```
 
@@ -289,9 +283,12 @@ Los **environments** de GitHub (`Settings → Environments`) permiten:
 
 Estrategias comunes:
 
-- Despliegue básico · Despliegue rolling
-- Despliegue Blue-Green · Despliegue Canary
-- Despliegue multi-servicio · Testing A/B
+- Despliegue básico 
+- Despliegue rolling
+- Despliegue Blue-Green
+- Despliegue Canary
+- Despliegue multi-servicio
+- Testing A/B
 
 ---
 
@@ -394,7 +391,6 @@ Se pueden enriquecer las etapas habituales o añadir nuevas:
 # Resumen
 
 CI valida cada cambio automáticamente; CD lo lleva hasta producción, con o sin intervención humana.
-GitHub Actions encadena jobs (`needs`), gestiona secretos y aprobaciones (`environment`).
 
-👉 **Práctica 4: CI con GitHub Actions**
-👉 **Práctica 5: CD con GitHub Actions**
+👉 Práctica 4: CI con GitHub Actions
+👉 Práctica 5: CD con GitHub Actions
