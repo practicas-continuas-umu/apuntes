@@ -12,7 +12,6 @@ title: "Boletín 4: Integración Continua con GitHub Actions"
 
 - **Entender qué es la Integración Continua** y por qué acorta el ciclo de feedback.
 - **Escribir un workflow de GitHub Actions** estructurado en varios jobs con dependencias entre ellos.
-- **Ejecutar tests de integración contra PostgreSQL real** con Testcontainers, igual en local que en el CI.
 - **Optimizar y acotar el pipeline**: caché, matriz, concurrencia, tiempos máximos y permisos mínimos.
 - **Convertir el CI en una barrera** mediante required status checks sobre `main`.
 
