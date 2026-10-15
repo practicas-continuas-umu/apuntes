@@ -38,11 +38,15 @@ MISUM · Universidad de Murcia
 
 > Una **pipeline CI/CD** es una secuencia automatizada de etapas que permite construir, probar y entregar software de forma continua, rápida y fiable.
 
+<center>
+
 | Práctica | ¿Qué automatiza? | ¿Llega a producción? |
 |---|---|---|
 | **Integración continua** | Compilación + tests al hacer commit | ❌ No |
 | **Entrega continua** | CI + empaquetado (+ despliegue a *staging*) | Lista para producción (manual) |
 | **Despliegue continuo** | Entrega continua + despliegue automático | ✅ Automáticamente |
+
+</center>
 
 ---
 
@@ -352,6 +356,8 @@ Un pipeline típico:
 
 ## GitHub Actions vs Jenkins
 
+<center>
+
 | Concepto | GitHub Actions | Jenkins |
 |---|---|---|
 | Definición del flujo | `.github/workflows/*.yml` | `Jenkinsfile` |
@@ -359,6 +365,8 @@ Un pipeline típico:
 | Bloques de trabajo | *Job* | *Stage* |
 | Entorno de ejecución | *Runner* (hospedado o propio) | *Agent* |
 | Acción reutilizable | *Action* (Marketplace) | *Shared Library* / plugin |
+
+</center>
 
 Jenkins es *self-hosted* y muy extensible (miles de plugins); GitHub Actions está integrado de forma nativa en GitHub, sin infraestructura propia que mantener.
 
@@ -369,7 +377,7 @@ Jenkins es *self-hosted* y muy extensible (miles de plugins); GitHub Actions est
 Se pueden enriquecer las etapas habituales o añadir nuevas:
 
 - **Análisis estático** de código (linters, SonarQube) entre compilación y tests.
-- **DevSecOps**: SAST, DAST, SCA, escaneo de imágenes Docker (Trivy, Clair)... (visto en el Tema 1).
+- **DevSecOps**: SAST, DAST, SCA, escaneo de imágenes Docker (Trivy, Clair)...
 
 ```yaml
   static-analysis:

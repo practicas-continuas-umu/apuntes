@@ -6,13 +6,15 @@ title: "Boletín 5: Entrega Continua: construir, versionar y publicar la imagen"
 
 > **OBJETIVO**
 >
-> Extender el pipeline para que, además de testear, construya la imagen Docker, la etiquete de forma trazable y la publique automáticamente en un registro (GitHub Container Registry). 
+> Añadir una pipeline que construya la imagen Docker, la etiquete de forma trazable y la publique automáticamente en un registro (GitHub Container Registry). 
 
 ## 1. Objetivos de la sesión
 
 
 - **Construir y publicar la imagen Docker** desde el pipeline hacia `ghcr.io`.
 - **Versionar con SemVer**: etiquetas Git, releases y tags de imagen trazables.
+- **Verificar** la imagen publicada descargándola del registro.
+- **Publicar la documentación** con GitHub Pages.
 
 ## 2. Conceptos clave
 
@@ -24,7 +26,7 @@ title: "Boletín 5: Entrega Continua: construir, versionar y publicar la imagen"
 | Continuous Delivery | Dejar SIEMPRE un artefacto listo para desplegar, con un paso manual final de aprobación. |
 | Continuous Deployment | Desplegar automáticamente a producción sin intervención humana. |
 
-En este boletín llegamos hasta **Continuous Delivery**: publicamos automáticamente una imagen lista para desplegar.
+En este boletín llegamos hasta tener una imagen lista para desplegar.
 
 ### 2.2 Versionado semántico y trazabilidad
 
@@ -32,11 +34,11 @@ Cada imagen debe llevar al menos:
 
 | Tag | Para qué sirve |
 |---|---|
-| sha-<commit> | Trazabilidad absoluta: de la imagen al commit exacto que la produjo. Inmutable. |
+| sha-`<commit>` | Trazabilidad absoluta: de la imagen al commit exacto que la produjo. |
 | 1.4.2 / 1.4 / 1 | Versión legible para las personas, según SemVer. |
 | latest | Comodidad para probar en local. Nunca para desplegar. |
 
-**SemVer** (`MAYOR.MENOR.PARCHE`): sube el parche al corregir un fallo, la menor al añadir funcionalidad compatible, y la mayor cuando rompes la compatibilidad de la API. Que los commits sigan Conventional Commits ([Boletín 1](boletin1-git-maven.html)) hace que esta decisión sea casi automática.
+**SemVer** (`MAYOR.MENOR.PARCHE`): sube el parche al corregir un fallo, la menor al añadir funcionalidad compatible, y la mayor cuando rompes la compatibilidad de la API. 
 
 ### 2.3 El modelo de permisos del pipeline
 
@@ -83,6 +85,7 @@ jobs:
             type=sha,prefix=sha-
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Construir y publicar
@@ -112,7 +115,7 @@ git push origin v1.0.0
 
 ### Parte C — Verificar la imagen publicada
 
-- Descarga y ejecuta tu imagen recién publicada desde el registro, **por su tag inmutable**. Desde el [Boletín 3](boletin3-docker.html) la app necesita una PostgreSQL real (ya no hay datasource embebida), así que levanta también la base de datos y conecta ambos contenedores por red, igual que hace tu `docker-compose.yml`:
+- Descarga y ejecuta tu imagen recién publicada desde el registro con el tag 1.0.0. Desde el [Boletín 3](boletin3-docker.html) la app necesita una PostgreSQL real (ya no hay datasource embebida), así que levanta también la base de datos y conecta ambos contenedores por red, igual que hace tu `docker-compose.yml`:
 
 ```bash
 docker network create tareas-net
@@ -145,9 +148,9 @@ Como dice el [Boletín 0](boletin0-guia-del-curso.html), has ido guardando la me
 - Copia (o mueve) tus `boletinX.md` desde el repositorio donde los tenías a una carpeta `docs/` en la raíz del repositorio de la API, uno por sesión entregada hasta ahora (`docs/boletin1.md` … `docs/boletin5.md`).
 - Dentro de `docs/`, escribe un script (node o python) que lea todos los `.md` de `docs/` y genere, para cada uno, un `.html` equivalente más un `index.html` que enlace a todos.  Deben guardarse en `docs/site/`. Recomiendo usar la IA para esto.
 - Prueba el script en local y revisa el resultado abriendo el HTML en el navegador.
-- Automatízalo con un workflow `.github/workflows/pages.yml` que, en cada push a `main`, ejecute el script y publique `site/` en GitHub Pages con las acciones oficiales.
+- Automatízalo con un workflow `.github/workflows/pages.yml` que, en cada push a `main`, ejecute el script y publique `docs/site/` en GitHub Pages con las acciones oficiales.
 - Para tener GitHub Pages funcionando, el repositorio debe ser público.
 - En **Settings → Pages**, cambia **Source** a **GitHub Actions**.
 - Añade `docs/site/` en el `.gitignore` para que no se suba al repositorio.
-- Comprueba que la web se publica correctamete (es la documentación que vas a entregar).
+- Comprueba que la web se publica correctamente (es la documentación que vas a entregar).
 
