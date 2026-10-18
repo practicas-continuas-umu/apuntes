@@ -6,7 +6,7 @@ title: "Boletín 5: Entrega Continua: construir, versionar y publicar la imagen"
 
 > **OBJETIVO**
 >
-> Añadir una pipeline que construya la imagen Docker, la etiquete de forma trazable y la publique automáticamente en un registro (GitHub Container Registry). 
+> Añadir una pipeline que construya la imagen Docker, la etiquete de forma trazable y la publique automáticamente en un registro (GitHub Container Registry). Crear también un workflow que publique la documentación de la API en GitHub Pages.
 
 ## 1. Objetivos de la sesión
 
@@ -30,13 +30,13 @@ En este boletín llegamos hasta tener una imagen lista para desplegar.
 
 ### 2.2 Versionado semántico y trazabilidad
 
-Cada imagen debe llevar al menos:
+Cada imagen puede llevar:
 
 | Tag | Para qué sirve |
 |---|---|
 | sha-`<commit>` | Trazabilidad absoluta: de la imagen al commit exacto que la produjo. |
 | 1.4.2 / 1.4 / 1 | Versión legible para las personas, según SemVer. |
-| latest | Comodidad para probar en local. Nunca para desplegar. |
+| latest | Última imagen construida desde main. |
 
 **SemVer** (`MAYOR.MENOR.PARCHE`): sube el parche al corregir un fallo, la menor al añadir funcionalidad compatible, y la mayor cuando rompes la compatibilidad de la API. 
 

@@ -72,9 +72,9 @@ jobs:
         run: mvn --batch-mode verify
 ```
 
-- Indica qué sentido el campo `concurrency` del `ci.yml`.
+- Indica qué sentido tiene el campo `concurrency` del `ci.yml`.
 
-- Indica cuando se dispara el workflow y fuerza el que se dispare en todas las ocasiones.
+- Indica cuando se dispara el workflow.
 
 
 ### Parte B — Demostrar que el CI atrapa errores
@@ -86,13 +86,14 @@ jobs:
 
 ### Parte C — Separar responsabilidades en jobs
 
-Un único job puede hacer que todo tarde más y da peor información. Si falla, no sabes de un vistazo si fue el formato o un test. Reestructura el workflow en tres jobs encadenados con `needs`:
+Un único job puede hacer que todo tarde más y da peor información. Reestructura el workflow (`ci.yml`) en tres jobs encadenados con `needs`:
 
 ```yaml
 permissions:
-  contents: read
-  actions: read
-  checks: write
+  contents: read   # leer el código (checkout)
+  actions: read    # dorny/test-reporter consulta los runs/artefactos del workflow
+  checks: write    # dorny/test-reporter publica el informe como check del PR
+  # (ojo, en PRs desde forks el token es de solo lectura y el paso "Publicar informe de tests" fallaría)
 
 jobs:
   lint:
@@ -149,10 +150,11 @@ jobs:
 
 - En **Settings → Branches**, edita la protección de `main` del [Boletín 2](boletin2-github.html) y activa **"Require status checks to pass before merging"**, seleccionando los checks `lint`, `test` y `package`.
 - Marca también **"Require branches to be up to date before merging"**. Esto obliga a actualizar la rama del PR respecto a main antes de fusionarla, cuando esta última haya avanzado.
+- Asegúrate de que está activada la opción **"Do not allow bypassing the above settings"**.
 - Verifica el resultado: abre un PR con un test roto y comprueba que GitHub impide fusionarlo.
 
 
 ### Parte E — Ampliaciones interesantes
 
-- **Gestión de secretos**: Genera un workflow tal que, cada vez que se haga un pull request, se ejecute una revisión de código por parte de una IA de manera que genere un resumen en lenguaje natural de qué se ha cambiado. Recomiendo algún modelo potente de Ollama Cloud. El API token se tiene que gestionar con secretos (no se puede hacer push de la API token al repositorio). Si hay algún error, el comentario debe indicar: "La IA ha fallado".
+- **Gestión de secretos**: Genera un workflow tal que, cada vez que se haga un pull request, se ejecute una revisión de código por parte de una IA de manera que genere un resumen en lenguaje natural de qué se ha cambiado. Recomiendo algún modelo potente de Ollama Cloud. El API token se tiene que gestionar con secretos (no se puede hacer push de la API token al repositorio, investiga la gestión de secretos en GitHub Actions). Si hay algún error, el comentario generado debe poner: "La IA ha fallado".
 - Añade un badge del estado del CI al README.
