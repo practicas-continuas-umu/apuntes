@@ -1,8 +1,8 @@
 ---
-title: "Boletín 6: Despliegue con Ansible: cerrar el ciclo"
+title: "Boletín 6: Despliegue con Ansible"
 ---
 
-# Boletín 6: Despliegue con Ansible: cerrar el ciclo
+# Boletín 6: Despliegue con Ansible
 
 > **OBJETIVO**
 >
