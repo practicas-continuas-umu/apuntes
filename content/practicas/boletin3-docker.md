@@ -435,5 +435,5 @@ Esta parte no debe modificar el repositorio del proyecto. Escoge un repositorio 
 1. Elegir repositorio. Selecciona un repositorio open-source popular y público (con >1k de estrellas o uso real).
 2. Analizar requisitos. Identifica lenguaje, versión/es, gestor de paquetes, herramientas de build y cualquier dependencia del sistema. Cita la fuente (README, docs oficiales, pyproject.toml, package.json, pom.xml, etc.).
 3. Crear Dockerfile. Escribe un Dockerfile que instale todas las dependencias y herramientas necesarias para ejecutar los tests del proyecto.
-4. Construir y ejecutar. Construye la imagen y ejecuta los tests dentro del contenedor, asegurándote de que todos pasan correctamente. Monta el código fuente del proyecto median
+4. Construir y ejecutar. Construye la imagen y ejecuta los tests dentro del contenedor, asegurándote de que todos pasan correctamente. 
 
