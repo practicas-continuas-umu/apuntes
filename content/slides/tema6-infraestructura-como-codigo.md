@@ -286,5 +286,5 @@ ansible-galaxy install geerlingguy.nginx
 IaC versiona y automatiza la infraestructura igual que el código de la aplicación.
 Ansible aprovisiona y configura sistemas de forma declarativa-imperativa, sin agentes.
 
-👉 **Práctica 6: Ansible**
-👉 **Proyecto**: integra Git, GitHub, Docker, CI/CD y Ansible
+👉 Práctica 6: Ansible
+👉 Proyecto: integra Git, GitHub, Docker, CI/CD y Ansible
