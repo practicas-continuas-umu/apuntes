@@ -91,9 +91,9 @@ Elimina la necesidad de aprovisionar y gestionar manualmente servidores, sistema
 ## Dos formas de describir la infraestructura
 
 - **Enfoque declarativo**: describe el **estado final deseado**, sin especificar cómo llegar a él.
-  - *Ejemplos*: Terraform, manifiestos de Kubernetes, CloudFormation.
+  - *Ejemplos*: Terraform, manifiestos de Kubernetes, CloudFormation, etc.
 - **Enfoque imperativo**: detalla los **pasos y comandos** concretos que hay que ejecutar, en orden, para lograr la configuración deseada.
-  - *Ejemplos*: **Ansible**, Chef, Puppet.
+  - *Ejemplos*: **Ansible**, Chef, Puppet, etc.
 
 > En la práctica se suele combinar: **declarativo** para la infraestructura (redes, VMs, clústeres) e **imperativo** para la configuración interna (paquetes, usuarios, scripts de despliegue). Combo muy usado: **Terraform + Ansible**.
 
@@ -120,9 +120,9 @@ Configuración habitual con **dos repositorios**: uno de aplicación (código + 
 
 1. Un desarrollador cambia código y abre un *Pull Request*.
 2. La CI construye una nueva imagen (`app:v2`) y la sube al *registry*.
-3. La CI actualiza la versión de la imagen en el repo de configuración (`commit`/`push`).
+3. La CI (o manualmente, se) actualiza la versión de la imagen en el repo de configuración (`commit`/`push`).
 4. El operador GitOps (Argo CD / Flux) detecta el cambio en Git.
-5. Aplica los *manifests* al clúster de Kubernetes → *rollout* automático.
+5. Aplica los *manifests* al clúster de Kubernetes.
 6. El operador verifica continuamente que lo desplegado coincide con lo declarado en Git.
 
 ---
@@ -236,6 +236,23 @@ ansible-playbook -i inventario site.yml
 
 ---
 
+## Idempotencia
+
+> Una operación es **idempotente** si ejecutarla una o varias veces produce el mismo resultado final.
+
+- Los módulos de Ansible describen el **estado deseado** (`state: present`, `started`...), no la acción a realizar.
+- Si el sistema ya está en ese estado, la tarea **no hace nada** (`ok`); si no, lo cambia (`changed`).
+- Podemos relanzar un playbook con seguridad: converge siempre al mismo estado.
+
+```text
+# 1ª ejecución                      # 2ª ejecución
+ok=2  changed=2  failed=0           ok=2  changed=0  failed=0
+```
+
+> ⚠️ Los módulos `command` y `shell` **no** son idempotentes por defecto: usa `creates:`, `removes:` o `when:` para controlarlo.
+
+---
+
 ## Roles
 
 > Los **roles** son una forma estructurada y modular de organizar la automatización de Ansible.
@@ -284,7 +301,7 @@ ansible-galaxy install geerlingguy.nginx
 # Resumen
 
 IaC versiona y automatiza la infraestructura igual que el código de la aplicación.
-Ansible aprovisiona y configura sistemas de forma declarativa-imperativa, sin agentes.
+Ansible aprovisiona y configura sistemas de forma declarativa-imperativa.
 
 👉 Práctica 6: Ansible
 👉 Proyecto: integra Git, GitHub, Docker, CI/CD y Ansible

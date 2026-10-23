@@ -56,7 +56,7 @@ sudo apt update && sudo apt install -y ansible
 ansible --version
 ```
 
-- Instala la **collection** que aporta los módulos de Docker. Sin esto, todas las tareas `community.docker.*` fallan:
+- Instala la **collection** que aporta los módulos de Docker.
 
 ```bash
 ansible-galaxy collection install community.docker
@@ -250,7 +250,7 @@ Crea `deploy/deploy.yml`. Instala Docker en toda la flota, despliega la base de 
 
 > **OJO**
 >
-> Las credenciales (`ghcr_token`, `db_name`, `db_user`, `db_pass`,...) **nunca** se escriben en el playbook ni se pasan por `--extra-vars` en la línea de comandos (quedan en el historial de tu shell y en la tabla de procesos). Usa Ansible Vault en local y secrets desde el CI. 
+> Las credenciales (`ghcr_token`, `db_name`, `db_user`, `db_pass`, ...) **nunca** se escriben en el playbook ni se pasan por `--extra-vars` en la línea de comandos (quedan en el historial de tu shell y en la tabla de procesos). Usa Ansible Vault en local y secrets desde el CI. 
 
 
 ### Parte E — Proteger las credenciales con Ansible Vault
