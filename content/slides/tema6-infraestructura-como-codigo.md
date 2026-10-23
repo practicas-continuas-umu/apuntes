@@ -248,8 +248,7 @@ ansible-playbook -i inventario site.yml
 # 1ª ejecución                      # 2ª ejecución
 ok=2  changed=2  failed=0           ok=2  changed=0  failed=0
 ```
-
-> ⚠️ Los módulos `command` y `shell` **no** son idempotentes por defecto: usa `creates:`, `removes:` o `when:` para controlarlo.
+> ⚠️ Los módulos `command` y `shell` **no** son idempotentes por defecto. Se usa `creates:`, `removes:` o `when:` para controlarlo.
 
 ---
 
