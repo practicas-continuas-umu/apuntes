@@ -1,0 +1,246 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: PC_2.0_p8
+
+Parameters:
+  VpcCIDR:
+    Default: 10.16.0.0/16
+    Description: The CIDR block for the VPC
+    Type: String
+    AllowedValues:
+      - 10.16.0.0/16
+
+  SubnetCIDR:
+    Default: 10.16.10.0/24
+    Description: CIDR for public subnet
+    Type: String
+    AllowedValues:
+      - 10.16.10.0/24
+
+  LabUserId:
+    Default: arn:aws:sts:012345678-assumed-role/vocareum-role/username
+    Description: session user ARN
+    Type: String
+
+  KeyName:
+    Default: vockey
+    Description: Amazon EC2 Key Pair
+    Type: AWS::EC2::KeyPair::KeyName
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      "Ubuntu": ami-042e8287309f5df03
+    us-west-2:
+      "Ubuntu": ami-0ca5c3bd5a268e7db
+
+Resources:
+  DevWorkspaceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access for Dev Workspace
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  DevWorkspaceInstance:
+    Type: AWS::EC2::Instance
+    DependsOn: AttachGateway
+    Properties:
+      IamInstanceProfile: LabInstanceProfile
+      ImageId: "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64}}"
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeleteOnTermination: "true"
+          DeviceIndex: "0"
+          GroupSet:
+            - !Ref DevWorkspaceSecurityGroup
+          SubnetId: !Ref Subnet
+      Tags:
+        - Key: Name
+          Value: DevWorkspaceInstance
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y
+          yum install -y docker
+          systemctl start docker
+          systemctl enable docker
+          usermod -aG docker ec2-user
+
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: Original VPC
+
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      CidrBlock: !Ref SubnetCIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: Cloud9 Subnet
+
+  IGW:
+    Type: AWS::EC2::InternetGateway
+    DependsOn: VPC
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    DependsOn:
+      - VPC
+      - IGW
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref IGW
+
+  Ec2Route:
+    Type: AWS::EC2::RouteTable
+    DependsOn:
+      - VPC
+      - AttachGateway
+    Properties:
+      VpcId: !Ref VPC
+
+  RouteOut:
+    Type: AWS::EC2::Route
+    DependsOn:
+      - Ec2Route
+      - AttachGateway
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+      RouteTableId: !Ref Ec2Route
+
+  SubnetRouteAssociate:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn:
+      - Ec2Route
+      - Subnet
+    Properties:
+      RouteTableId: !Ref Ec2Route
+      SubnetId: !Ref Subnet
+
+  Ec2AppNodeSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP access via port 8000 and 80 + SSH access
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  MySQLServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable mysql access via port 3306 and ssh for now
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  Ec2AppNode:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - Ec2MySqlServerNode
+      - AttachGateway
+    Properties:
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", Ubuntu]
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeleteOnTermination: "true"
+          DeviceIndex: "0"
+          GroupSet:
+            - !Ref Ec2AppNodeSecurityGroup
+          SubnetId: !Ref Subnet
+      Tags:
+        - Key: Name
+          Value: AppServerNode
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          apt update -y
+          apt install nodejs unzip wget npm -y
+          wget https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/CUR-TF-200-ACCDEV-2/lab-06-containers/code.zip -P /home/ubuntu
+          cd /home/ubuntu
+          unzip code.zip -x "resources/codebase_partner/node_modules/*"
+          cd resources/codebase_partner
+          npm install
+          APP_DB_HOST=${Ec2MySqlServerNode.PrivateIp} \
+            APP_DB_USER=nodeapp \
+            APP_DB_PASSWORD=coffee \
+            APP_DB_NAME=COFFEE \
+            APP_PORT=80 \
+            npm start
+
+  Ec2MySqlServerNode:
+    Type: AWS::EC2::Instance
+    DependsOn: AttachGateway
+    Properties:
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", Ubuntu]
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeleteOnTermination: "true"
+          DeviceIndex: "0"
+          GroupSet:
+            - !Ref MySQLServerSecurityGroup
+          SubnetId: !Ref Subnet
+      Tags:
+        - Key: Name
+          Value: MysqlServerNode
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          apt update -y
+          apt install mysql-server -y
+          mysql -u root -e "CREATE USER 'nodeapp' IDENTIFIED WITH mysql_native_password BY 'coffee'";
+          mysql -u root -e "GRANT all privileges on *.* to 'nodeapp'@'%';"
+          mysql -u root -e "CREATE DATABASE COFFEE;"
+          mysql -u root -e "USE COFFEE; CREATE TABLE suppliers(
+                      id INT NOT NULL AUTO_INCREMENT,
+                      name VARCHAR(255) NOT NULL,
+                      address VARCHAR(255) NOT NULL,
+                      city VARCHAR(255) NOT NULL,
+                      state VARCHAR(255) NOT NULL,
+                      email VARCHAR(255) NOT NULL,
+                      phone VARCHAR(100) NOT NULL,
+                      PRIMARY KEY ( id ));"
+
+          sed -i 's/.*bind-address.*/bind-address = 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
+          service mysql restart
+
+Outputs:
+  AppServerPublicIp:
+    Description: The public ip address for the coffee site
+    Value: !Sub http://${Ec2AppNode.PublicIp}
