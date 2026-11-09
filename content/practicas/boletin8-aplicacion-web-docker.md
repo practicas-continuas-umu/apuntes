@@ -86,7 +86,7 @@ En esta tarea, configurarás tu entorno de desarrollo para respaldar el trabajo 
 - Conéctate a la instancia EC2 de desarrollo.
   - Navega hasta la consola de EC2.
   - Selecciona "Instancias". Observa que hay tres instancias en funcionamiento.
-  - Una de las instancias (_DevWorkspaceInstance_) es la instancia de AWS Cloud9.
+  - Una de las instancias (_DevWorkspaceInstance_) es la instancia de desarrollo.
   - Las otras dos instancias (_MysqlServerNode_ y _AppServerNode_) pertenecen a la aplicación que containerizarás en este laboratorio.
   - Selecciona la instancia _DevWorkspaceInstance_ y copia el valor de la dirección IPv4 pública.
   - Conéctate a la instancia mediante SSH igual que hicimos en la práctica anterior.
